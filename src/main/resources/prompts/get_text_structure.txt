@@ -1,7 +1,0 @@
-Provide an outline of the text.
-The output should only contain the list of topic names without explanations.
-The format should be:
-<number>. <topic_name>
-<number>.<sub_number>. <sub_topic_name>
-
-Text content:

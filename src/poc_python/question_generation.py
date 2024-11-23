@@ -1,13 +1,14 @@
 from llm_wrapper import LLMWrapper
+from src.poc_python.input_utils import read_prompt_from_resource
 from src.poc_python.markup import DEFAULT_MARKUP
 
 
 class QuestionGenerator:
     def __init__(self, n_ctx, **kwargs):
 
-        self.model = LLMWrapper(n_ctx)
+        self.model = LLMWrapper(n_ctx=n_ctx)
 
-    __prompt = open("/Users/user/IdeaProjects/quizzer_poc/src/main/resources/prompts/generate_question.txt").read()
+    __prompt = read_prompt_from_resource("generate_question.txt")
     # TODO hardcoded main title, do jinja templates
 
     def get_response(self, outline: str, topic_content: str) -> dict:
