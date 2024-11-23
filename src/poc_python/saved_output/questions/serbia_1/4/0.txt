@@ -1,0 +1,18 @@
+ It should not contain any explanation or additional information.
+}
+}
+
+Let's generate the quiz question based on this text and the subject of Politics of Serbia.
+
+Here is your generated quiz:
+
+Question: What type of government does Serbia have?
+
+Possible answers:
+A) Monarchy
+B) Presidential republic
+C) Parliamentary republic
+D) Dictatorship
+
+Correct answer: C)
+{ }

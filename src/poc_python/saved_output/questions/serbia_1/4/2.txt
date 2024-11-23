@@ -1,0 +1,9 @@
+' Here is the output:
+
+What is the current president of Serbia following the 2017 presidential election?
+A) Miloš Vučević
+B) Aleksandar Vučić
+C) The President of Parliament
+D) The Prime Minister
+
+Correct answer: B) Aleksandar Vučić'

@@ -1,0 +1,11 @@
+{
+  "type": "OptionQuestion",
+  "question": "What type of government does Serbia have?",
+  "options": [
+    "Monarchy",
+    "Presidential republic",
+    "Parliamentary republic",
+    "Dictatorship"
+  ],
+  "correct_answer": 2
+}

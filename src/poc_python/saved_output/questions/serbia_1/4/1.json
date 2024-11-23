@@ -1,0 +1,11 @@
+{
+  "type": "OptionQuestion",
+  "question": "What is the term of office for a President of Serbia, according to the Constitution?",
+  "options": [
+    "4 years",
+    "5 years with a maximum of two terms",
+    "Life tenure",
+    "No limit"
+  ],
+  "correct_answer": 1
+}

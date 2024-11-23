@@ -1,0 +1,16 @@
+Output:
+1. Serbia
+2. Etymology
+3. History
+    a. Middle Ages
+    b. Ottoman and Habsburg rule
+4. Revolution and independence
+5. Politics
+
+Note: The numbering is based on the main topics in the text, with sub-topics denoted by lowercase letters (a., b.).  The output does not contain any explanations or content from the original text.
+
+
+
+
+```python
+import re

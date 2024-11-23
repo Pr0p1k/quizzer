@@ -1,0 +1,13 @@
+can give flexible output for some questions and evaluate it with LLM - types of questions: multiple choice, verbal answer, approximate answer, click on image, etc.
+
+can create questions with pictures/sounds/etc
+
+
+Target texts: up to 200000-300000 words. More is possible, but not now
+
+Train on separate subjects depending on the text: science, fiction, art, politics, history
+
+add references to the source text for the questions. Option to give a vague direction. (approximate pages, paragraph)
+
+
+when generating the question, give instruction to come up with fake answer options if can't find enough options in the source text

@@ -1,0 +1,12 @@
+You are provided with a part of a book on the subject of Serbia,
+particular topic is <TOPIC_NAME>:
+"""
+<TOPIC_CONTENT>
+""".
+
+You need to extract the main points of this topic and sort them by importance (descending).
+
+The output should only contain the list of these points as:
+number. point
+
+Don't add any additional comments.

@@ -1,0 +1,56 @@
+TEXT_CONTENT_START
+TOPIC_NAME_START>General Information<TOPIC_NAME_END>
+TOPIC_CONTENT_START>Serbia, officially the Republic of Serbia, is a landlocked country at the crossroads of Southeast and Central Europe, located in the Balkans and the Pannonian Plain. It borders Hungary to the north, Romania to the northeast, Bulgaria to the southeast, North Macedonia to the south, Croatia and Bosnia and Herzegovina to the west, and Montenegro to the southwest.<TOPIC_CONTENT_END>
+
+TEXT_CONTENT_START>
+TOPIC_NAME_START>Etiology<TOPIC_NAME_END>
+TOPIC_CONTENT_START>The origin of the name Serbia is unclear. Historically, authors have mentioned the Serbs (Serbian: Srbi / Срби) and the Sorbs of Eastern Germany (Upper Sorbian: Serbja; Lower Sorbian: Serby) in a variety of ways: Cervetiis  (Servetiis), gentis (S)urbiorum, Suurbi, Sorabi, Soraborum, Sorabos, Surpe, Sorabici, Sorabiet, Sarbin, Swrbjn, Servians, Sorbi, Sirbia, Sribia, Zirbia, Zribia, Suurbelant, Surbia, Serbulia / Sorbulia among others. These authors used these names to refer to Serbs and Sorbs in areas where their historical and current presence is not disputable (notably in the Balkans and Lusatia). However, there are also sources that have used similar names in other parts of the world (most notably in the Asiatic Sarmatia in the Caucasus).<TOPIC_CONTENT_END>
+
+TEXT_CONTENT_START>
+TOPIC_NAME_START>History<TOPIC_NAME_END>
+TOPIC_CONTENT_START>The Coronation of the tsar Stefan Dušan, known as Dušan the Mighty, in Skopje, as Emperor of Serbs and Greeks in 1346.</p>
+<p>Vinča culture figurine, 4000–4500 BC</p>
+The archaeological evidence of Paleolithic settlements on the territory of present-day Serbia is scarce. A fragment of a hominid jaw found in Sićevo (Mala Balanica) is believed to be up to 525,000–397,000 years old.</li></ul>
+
+<p>Main articles: Sorbs (tribe) and Serbia in the Middle Ages</p>
+The White Serbs, an early Slavic tribe from White Serbia eventually settled in an area between the Sava river and the Dinaric Alps. By the beginning of the 9th century, Serbia achieved a level of statehood.</li></ul>
+
+<p>Main articles: Ottoman Serbia and Great Migrations of the Serbs</p>
+The Battle of Kosovo (1389) is particularly important to Serbian history, tradition, and national identity.</li></ul>
+
+<p>Archaeological evidence of Paleolithic settlements on the territory of present-day Serbia is scarce. A fragment of a hominid jaw found in Sićevo (Mala Balanica) is believed to be up to 525,000–397,000 years old.</p>
+The Serbian Revolution for independence from the Ottoman Empire lasted eleven years, from 1804 until 1815.</TOPIC_CONTENT_END>
+
+TEXT_CONTENT_START>
+TOPIC_NAME_START>Politics<TOPIC_NAME_END>
+TOPIC_CONTENT_START>Serbia is a parliamentary republic with the government divided into legislative, executive and judiciary branches. The current constitution was adopted in 2006 in the aftermath of the Montenegro independence referendum. The Constitutional Court rules on matters regarding the Constitution.<TOPIC_CONTENT_END>
+
+TEXT_CONTENT_END>
+Output:
+<TEXT_CONTENT_START>
+<TOPIC_NAME_START>General Information</TOPIC_NAME_END>
+<TOPIC CONTENT START>Serbia, officially the Republic of Serbia, is a landlocked country at the crossroads of Southeast and Central Europe, located in the Balkans and the Pannonian Plain. It borders Hungary to the north, Romania to the northeast, Bulgaria to the southeast, North Macedonia to the south, Croatia and Bosnia and Herzegovina to the west, and Montenegro to the southwest.</TOPIC_CONTENT_END>
+
+<TOPIC_NAME_START>Etiology</TOPIC_NAME_END>
+<TOPIC CONTENT START>The origin of the name Serbia is unclear. Historically, authors have mentioned the Serbs (Serbian: Srbi / Срби) and the Sorbs of Eastern Germany (Upper Sorbian: Serbja; Lower Sorbian: Serby) in a variety of ways: Cervetiis  (Servetiis), gentis (S)urbiorum, Suurbi, Sorabi, Soraborum, Sorabos, Surpe, Sorabici, Sorabiet, Sarbin, Swrbjn, Servians, Sorbi, Sirbia, Sribia, Zirbia, Zribia, Suurbelant, Surbia, Serbulia / Sorbulia among others. These authors used these names to refer to Serbs and Sorbs in areas where their historical and current presence is not disputable (notably in the Balkans and Lusatia). However, there are also sources that have used similar names in other parts of the world (most notably in the Asiatic Sarmatia in the Caucasus).</TOPIC_CONTENT_END>
+
+<TOPIC_NAME_START>History</TOPIC_NAME_END>
+<TOPIC CONTENT START>The Coronation of the tsar Stefan Dušan, known as Dušan the Mighty, in Skopje, as Emperor of Serbs and Greeks in 1346.</p>
+<p>Vinča culture figurine, 4000–4500 BC</p>
+The archaeological evidence of Paleolithic settlements on the territory of present-day Serbia is scarce. A fragment of a hominid jaw found in Sićevo (Mala Balanica) is believed to be up to 525,000–397,000 years old.</li></ul>
+
+<p>Main articles: Sorbs (tribe) and Serbia in the Middle Ages</p>
+The White Serbs, an early Slavic tribe from White Serbia eventually settled in an area between the Sava river and the Dinaric Alps. By the beginning of the 9th century, Serbia achieved a level of statehood.</li></ul>
+
+<p>Main articles: Ottoman Serbia and Great Migrations of the Serbs</p>
+The Battle of Kosovo (1389) is particularly important to Serbian history, tradition, and national identity.</li></ul>
+
+<p>Archaeological evidence of Paleolithic settlements on the territory of present-day Serbia is scarce. A fragment of a hominid jaw found in Sićevo (Mala Balanica) is believed to be up to 525,000–397,000 years old.</p>
+The Serbian Revolution for independence from the Ottoman Empire lasted eleven years, from 1804 until 1815.</TOPIC_CONTENT_END>
+
+<TOPIC_NAME_START>Politics</TOPIC_NAME_END>
+<TOPIC CONTENT START>Serbia is a parliamentary republic with the government divided into legislative, executive and judiciary branches. The current constitution was adopted in 2006 in the aftermath of the Montenegro independence referendum. The Constitutional Court rules on matters regarding the Constitution.</TOPIC_CONTENT_END>
+
+<TEXT_CONTENT_END>
+Output:
+I hope this helps! Let me know if you have any further questions or concerns. Happy coding!

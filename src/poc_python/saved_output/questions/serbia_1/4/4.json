@@ -1,0 +1,11 @@
+{
+  "type": "OptionQuestion",
+  "question": "What is the subject that foreign relations are conducted through?",
+  "options": [
+    "Ministry of Justice",
+    "Ministry of Defence",
+    "Minity of Foreign Affairs",
+    "Serbian Police"
+  ],
+  "correct_answer": 2
+}
