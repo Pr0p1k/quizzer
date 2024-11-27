@@ -5,7 +5,7 @@ from splitter import LLMSplitMarkup
 from src.poc_python import ROOT_DIR, SAMPLE_OUTPUTS, STAGES
 from src.poc_python.markup_splitter import split_markup_text
 from src.poc_python.output_utils import get_output, split_outline_list
-from src.poc_python.question.questions import Question
+from src.poc_python.quiz.questions import Question
 from src.poc_python.question_extraction import QuestionExtractor
 from src.poc_python.question_generation import QuestionGenerator
 from src.poc_python.ui.cli.quiz_cli import QuizCliUi
@@ -73,5 +73,5 @@ else:
 
 quiz = QuizCliUi("Serbia", questions)
 
-quiz.start_game()
+quiz.start_quiz()
 

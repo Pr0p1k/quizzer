@@ -1,5 +1,7 @@
 import re
 
+from src.poc_python.quiz.questions import Question
+
 
 def get_output(response: dict) -> str:
     return response["choices"][0]["text"]

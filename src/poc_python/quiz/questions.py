@@ -1,3 +1,4 @@
+from __future__ import annotations
 import json
 from abc import abstractmethod, ABC
 from typing import Any
@@ -11,7 +12,7 @@ class Question(ABC):
         ...
 
     @staticmethod
-    def from_json_str(json_str: str) -> "Question": # TODO type
+    def from_json_str(json_str: str) -> Question:
         data = json.loads(json_str)
         subclasses = Question.__all_subclasses(Question)
         question_type = data.pop("type")
@@ -20,7 +21,6 @@ class Question(ABC):
             raise Exception(f"Question type not found: {question_type}")
 
         return cls(**data)
-
 
     @staticmethod
     def __all_subclasses(cls) -> set:

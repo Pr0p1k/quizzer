@@ -1,23 +1,35 @@
-from src.poc_python.question.questions import Question
+from src.poc_python.quiz.chapters import SuperChapter, SubChapter
+from src.poc_python.quiz.questions import Question, OptionQuestion
+from src.poc_python.quiz.quiz import Quiz
 
 
 class QuizCliUi:
 
-    def __init__(self, name: str, questions: list[Question]):
-        self.name = name
-        self.questions = questions
-        self.score = 0
-        self.total_count = len(questions)
+    def __init__(self, quiz: Quiz):
+        self.name = quiz.name
+        self.quiz = quiz
 
 
-    def start_game(self):
+    def start_quiz(self):
         print(f"CLI Quiz on the subject of {self.name}\n")
-        for question in self.questions:
-            answer = input(self.get_prompt(question))
-            if question.evaluate_answer(int(answer) - 1): # correction of 0-based index
-                self.score += 1
+        quiz = self.quiz
+        questions_total = 0
+        score = 0
 
-        print(f"Quiz finished with score: {self.score} of {self.total_count}")
+        for chapter in quiz.chapters:
+            if isinstance(chapter, SuperChapter):
+                pass # TODO
+            if True: # isinstance(chapter, SubChapter): TODO WTF?
+                print(f"Chapter \"{chapter.name}\":")
+                for question in chapter.questions:
+                    questions_total += 1
+                    answer = input(self.get_prompt(question))
+                    if question.evaluate_answer(int(answer) - 1): # correction of 0-based index
+                        score += 1
+                    print("-" * 100)
 
-    def get_prompt(self, question):
-        return f"{question.text}\n\n{'    '.join(question.options)}\n\n" # TODO come up with structure of question types
+        print(f"Quiz finished with score: {score} of {questions_total}")
+
+    def get_prompt(self, question: Question):
+        underline = '    '.join(question.options) # if isinstance(question, OptionQuestion) else "" TODO WTF?
+        return f"{question.text}\n\n{underline}\n\n"
