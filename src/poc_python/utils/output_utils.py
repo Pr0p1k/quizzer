@@ -1,7 +1,8 @@
 import json
 import re
 
-from markup import DEFAULT_MARKUP
+from src.poc_python.text_processors.markup import DEFAULT_MARKUP
+
 
 def get_output(response: dict) -> str:
     if "choices" not in response: # TODO follow some structure

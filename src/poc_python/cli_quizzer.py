@@ -1,6 +1,9 @@
 import os.path
 from os import listdir
 from os.path import join, isfile
+from colorama import init as colorama_init
+from colorama import Fore
+from colorama import Style
 
 from src.poc_python import ROOT_DIR, SAMPLE_INPUTS, BYPASS_CACHE
 from src.poc_python.process_new_text import generate_full_quiz
@@ -25,13 +28,18 @@ SOURCES_PATH = str(join(ROOT_DIR, SAMPLE_INPUTS))
 found_files = [f for f in listdir(SOURCES_PATH) if isfile(join(SOURCES_PATH, f))]
 
 texts = list(map(lambda num_to_file:
-                 f"{num_to_file[0] + 1}. {num_to_file[1]}" +
-                 f" -> {"Already processed" if is_processed(num_to_file[1]) else "Not yet processed"}",
+                 f"{num_to_file[0] + 1}. {Fore.BLUE}{num_to_file[1]}{Style.RESET_ALL}" +
+                 f" -> {
+                 f"{Fore.GREEN}Already processed{Style.RESET_ALL}" if is_processed(num_to_file[1])
+                 else
+                 f"{Fore.RED}Not yet processed{Style.RESET_ALL}"}",
                  enumerate(found_files)))
+
+colorama_init(autoreset=True)
 
 print(f"Found following texts:\n    {'\n    '.join(texts)}")
 
-text_number = int(input("Select a number of text to start quiz: "))
+text_number = int(input("Select the number of a text to start quiz: "))
 
 selected_text = found_files[text_number - 1]
 

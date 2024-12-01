@@ -1,10 +1,5 @@
-from typing import Any
-
 from src.poc_python import Stage, CONFIG
-from src.poc_python.text_processors.chapter_splitter import SpacyAndRegexSplitter
-from src.poc_python.text_processors.processors import LlamaWrapper, Processor
-from src.poc_python.text_processors.key_points_extractor import LLMKeyPointsExtractor
-from src.poc_python.text_processors.question_generator import LLMQuestionGenerator
+from src.poc_python.text_processors.processors import Processor
 from src.poc_python.utils.class_utils import find_subclass_by_name
 
 __ALLOCATED_PROCESSORS = dict() # TODO do deallocation in the end

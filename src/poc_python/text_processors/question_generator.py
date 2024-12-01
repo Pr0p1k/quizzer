@@ -4,7 +4,7 @@ from llama_cpp.llama_grammar import JSON_GBNF
 from src.poc_python import Stage
 from src.poc_python.utils.input_utils import read_prompt_from_resource
 from src.poc_python.text_processors.processors import LlamaWrapper, Processor
-from src.poc_python.markup import DEFAULT_MARKUP
+from src.poc_python.text_processors.markup import DEFAULT_MARKUP
 
 
 class LLMQuestionGenerator(Processor):

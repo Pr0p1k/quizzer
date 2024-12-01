@@ -1,6 +1,3 @@
-from typing import Any
-
-
 def find_subclass_by_name(cls, name) -> type | None:
     subs = cls.__subclasses__()
 
