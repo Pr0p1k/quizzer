@@ -12,4 +12,4 @@ The output should be in the format of JSON with the following fields:
 type: "OptionQuestion" // don't change this value
 question - string
 options - list of strings
-correct_answer - integer
+correct_answer - string

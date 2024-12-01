@@ -22,7 +22,7 @@ class Question(ABC):
         question_type = data.pop("type")
 
         # find the class with the name of question type, e.g. OptionQuestion
-        cls = next(c for c in subclasses if c.__name__ == question_type)  # TODO default
+        cls = next(c for c in subclasses if c.__name__ == question_type)
         if not cls:
             raise Exception(f"Question type not found: {question_type}")
 
@@ -35,13 +35,14 @@ class Question(ABC):
 
 
 class OptionQuestion(Question):
-    def __init__(self, question: str, options: list[str], correct_answer: int):
+    def __init__(self, question: str, options: list[str], correct_answer: str):
         self.text = question
         self.options = options
         self.answer = correct_answer
 
     def evaluate_answer(self, answer: int) -> bool:
-        return answer == self.answer
+        # get the answer by its number, correct 1-based index to 0-based
+        return self.options[answer - 1] == self.answer
 
     def correct_answer(self):
         return self.answer

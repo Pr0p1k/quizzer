@@ -27,7 +27,7 @@ class QuizCliUi:
                     questions_total += 1
                     answer = input(self.get_prompt(question))
 
-                    is_correct = question.evaluate_answer(int(answer) - 1) # correction of 0-based index
+                    is_correct = question.evaluate_answer(int(answer))
 
                     score += int(is_correct) # add 0 or 1
 
