@@ -3,6 +3,8 @@ import json
 from abc import abstractmethod, ABC
 from typing import Any
 
+from src.poc_python.utils.class_utils import find_subclass_by_name
+
 
 class Question(ABC):
     text: str
@@ -22,9 +24,7 @@ class Question(ABC):
         question_type = data.pop("type")
 
         # find the class with the name of question type, e.g. OptionQuestion
-        cls = next(c for c in subclasses if c.__name__ == question_type)
-        if not cls:
-            raise Exception(f"Question type not found: {question_type}")
+        cls = find_subclass_by_name(Question, question_type)
 
         return cls(**data)
 

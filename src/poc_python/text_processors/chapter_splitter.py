@@ -7,17 +7,15 @@ from src.poc_python.text_processors.processors import Processor
 from llama_cpp import LlamaGrammar
 from llama_cpp.llama_grammar import JSON_ARR_GBNF
 
-from src.poc_python.input_utils import read_prompt_from_resource
+from src.poc_python.utils.input_utils import read_prompt_from_resource
 from src.poc_python.text_processors.processors import LlamaWrapper
 
 class SpacyAndRegexSplitter(Processor):
-    def __init__(self):
-        pass # TODO
 
     def process(self, input_text: str, **kwargs) -> dict:
         # Assuming chapter titles are standalone lines
         # TODO choose proper upper limit of word count (5)
-        chapter_title_pattern = re.compile(r"^(?:[A-Za-z0-9]+(?:\s[A-Za-z0-9]+){0,5})$", re.MULTILINE) # TODO optimize the re
+        chapter_title_pattern = re.compile(r"^(?:\s?[A-Za-z0-9]+){1,5}$", re.MULTILINE)
 
         chapter_matches = list(chapter_title_pattern.finditer(input_text))
 

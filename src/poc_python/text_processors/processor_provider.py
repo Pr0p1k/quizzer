@@ -1,22 +1,22 @@
 from typing import Any
 
-from src.poc_python import Stage
+from src.poc_python import Stage, CONFIG
 from src.poc_python.text_processors.chapter_splitter import SpacyAndRegexSplitter
 from src.poc_python.text_processors.processors import LlamaWrapper, Processor
-from src.poc_python.text_processors.key_points_extractor import KeyPointsExtractor
-from src.poc_python.text_processors.question_generator import QuestionGenerator
+from src.poc_python.text_processors.key_points_extractor import LLMKeyPointsExtractor
+from src.poc_python.text_processors.question_generator import LLMQuestionGenerator
+from src.poc_python.utils.class_utils import find_subclass_by_name
 
-__ALLOCATED_PROCESSORS = dict()
+__ALLOCATED_PROCESSORS = dict() # TODO do deallocation in the end
 
 
 def get_processor_lazy(stage: Stage) -> Processor:
     if not __ALLOCATED_PROCESSORS.get(stage):
-        kwargs = {} # TODO get from a config for the stage
-        if stage == Stage.MARKUP: # TODO move stage to processor mapping somewhere else. Should I?
-            processor = SpacyAndRegexSplitter()
-        elif stage == Stage.KEY_POINTS:
-            processor = KeyPointsExtractor()
-        else:
-            processor = QuestionGenerator()
-        __ALLOCATED_PROCESSORS[stage] = processor
+        processor_type_name = str(CONFIG.__getattr__(stage.value).approach)
+
+        cls = find_subclass_by_name(Processor, processor_type_name)
+        if not cls:
+            raise TypeError(f"Processor type '{processor_type_name}' not found")
+
+        __ALLOCATED_PROCESSORS[stage] = cls()
     return __ALLOCATED_PROCESSORS[stage]

@@ -3,11 +3,13 @@ from abc import abstractmethod, ABC
 
 from .questions import Question
 
-
-# TODO multiple questions per key point?
-
-# TODO docs
 class Chapter(ABC):
+    f"""
+    Represents a chapter in the Quiz
+    SuperChapter - an upper level of chapters - contain SubChapters, but not Questions. 
+        Can be a sub chapter in common sense as well, but here SuperChapter just means it's not a leaf chapter
+    SubChapter - actual chapter containing questions
+    """
     name: str
 
     def __str__(self):

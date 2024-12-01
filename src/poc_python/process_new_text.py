@@ -4,7 +4,7 @@ from quiz.chapters import SubChapter
 from quiz.questions import Question
 from quiz.quiz import Quiz
 from src.poc_python import MEM, Stage, BYPASS_CACHE
-from src.poc_python.output_utils import get_output, get_key_points_list_json, split_markup_text_json
+from src.poc_python.utils.output_utils import get_output, get_key_points_list_json, split_markup_text_json
 from src.poc_python.text_processors.processor_provider import get_processor_lazy
 
 logging.basicConfig()

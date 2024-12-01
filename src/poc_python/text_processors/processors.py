@@ -26,6 +26,6 @@ class LlamaWrapper:
         self.model = Llama(**global_conf)
 
     def generate(self, prompt: str, grammar: LlamaGrammar) -> dict:
-        response = self.model(prompt, **self.prompting_conf, grammar=grammar) # TODO grammar should be put into config
+        response = self.model(prompt, **self.prompting_conf, grammar=grammar)  # TODO grammar should be put into config
 
         return response
