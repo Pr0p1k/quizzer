@@ -1,0 +1,190 @@
+Handle Signals on Linux and macOS
+The Java HotSpot VM installs signal handlers to implement various features and to handle fatal error conditions.
+
+For example, in an optimization to avoid explicit null checks in cases where java.lang.NullPointerException will be thrown rarely, the SIGSEGV signal is caught and handled, and the NullPointerException is thrown.
+
+In general, there are two categories where signal/traps happen:
+
+When signals are expected and handled, like implicit null-handling. Another example is the safepoint polling mechanism, which protects a page in memory when a safepoint is required. Any thread that accesses that page causes a SIGSEGV, which results in the execution of a stub that brings the thread to a safepoint.
+
+Unexpected signals. This includes a SIGSEGV when executing in VM code, Java Native Interface (JNI) code, or native code. In these cases, the signal is unexpected, so fatal error handling is invoked to create the error log and terminate the process.
+
+Table 8-2 lists the signals that are currently used on the Linux and macOS operating systems.
+
+Handle Exceptions on Windows
+On Windows, an exception is an event that occurs during the execution of a program.
+
+There are two kinds of exceptions: hardware exceptions and software exceptions. Hardware exceptions are comparable to signals such as SIGSEGV and SIGKILL on the Linux operating system. Software exceptions are initiated explicitly by applications or the operating system using the RaiseException() API.
+
+On Windows, the mechanism for handling both hardware and software exceptions is called structured exception handling (SEH). This is stack frame-based exception handling similar to the C++ and Java exception handling mechanism. In C++, the __try and __except keywords are used to guard a section of code that might result in an exception, as shown in the following example.
+
+
+Copy
+__try {
+     // guarded body of code
+ } __except (filter-expression) {
+     // exception-handler block
+ }
+The __except block is filtered by a filter expression that uses the integer exception code returned by the GetExceptionCode() API, exception information returned by the GetExceptionInformation() API, or both.
+
+The filter expression should evaluate to one of the following values:
+
+EXCEPTION_CONTINUE_EXECUTION = -1
+
+The filter expression repaired the situation, and execution continues where the exception occurred. Unlike some exception schemes, SEH supports the resumption model as well. This is much like the UNIX signal handling in the sense that after the signal handler finishes, the execution continues where the program was interrupted. The difference is that the handler in this case is just the filter expression itself and not the __except block. However, the filter expression might also involve a function call.
+
+EXCEPTION_CONTINUE_SEARCH = 0
+
+The current handler cannot handle this exception. Continue the handler search for the next handler. This is similar to the catch block not matching an exception type in C++ and Java.
+
+EXCEPTION_EXECUTE_HANDLER = 1
+
+The current handler matches and can handle the exception. The __except block is executed.
+
+The __try and __finally keywords are used to construct a termination handler, as shown in the following example.
+
+
+Copy
+__try {
+    // guarded body of code
+} __finally {
+    // __finally block
+}
+When control leaves the __try block (after an exception or without an exception), the __finally block is executed. Inside the __finally block, the AbnormalTermination() API can be called to test whether control continued after the exception or not.
+
+Windows programs can also install a top-level unhandled exception filter function to catch exceptions that are not handled in the __try/__except block. This function is installed on a process-wide basis using the SetUnhandledExceptionFilter() API. If there is no handler for an exception, then UnhandledExceptionFilter() is called, and this will call the top-level unhandled exception filter function, if any, to catch that exception. This function also shows a message box to notify the user about the unhandled exception.
+
+Windows exceptions are comparable to UNIX synchronous signals that are attributable to the current execution stream. In Windows, asynchronous events such as console events (for example, the user pressing Control+C at the console) are handled by the console control handler registered using the SetConsoleCtlHandler() API.
+
+If an application uses the signal() API on Windows, then the C runtime library (CRT) maps both Windows exceptions and console events to appropriate signals or C runtime errors. For example, CRT maps Control+C to SIGINT and all other console events to SIGBREAK. Similarly, if you register the SIGSEGV handler, CRT translates the corresponding exception to a signal. CRT startup code implements a __try/__except block around the main() function. The CRT's exception filter function (named _XcptFilter) maps the Win32 exceptions to signals and dispatches signals to their appropriate handlers. If a signal's handler is set to SIG_DFL (default handling), then _XcptFilter calls UnhandledExceptionFilter.
+
+The vectored exception handling mechanism can also be used. Vectored handlers are not frame-based handlers. A program can register zero or more vectored exception handlers using the AddVectoredExceptionHandler API. Vectored handlers are invoked before structured exception handlers, if any, are invoked, regardless of where the exception occurred.
+
+The vectored exception handler returns one of the following values:
+
+EXCEPTION_CONTINUE_EXECUTION: Skip the next vectored and SEH handlers.
+
+EXCEPTION_CONTINUE_SEARCH: Continue to the next vectored or SEH handler.
+
+Signal Chaining
+Signal chaining enables you to write applications that need to install their own signal handlers. This facility is available on Linux and macOS.
+
+The signal chaining facility has the following features:
+
+Support for preinstalled signal handlers when you create Oracle’s HotSpot Virtual Machine.
+
+When the HotSpot VM is created, the signal handlers for signals that are used by the HotSpot VM are saved. During execution, when any of these signals are raised and are not to be targeted at the HotSpot VM, the preinstalled handlers are invoked. In other words, preinstalled signal handlers are chained behind the HotSpot VM handlers for these signals.
+
+Support for the signal handlers that are installed after you create the HotSpot VM, either inside the Java Native Interface code or from another native thread.
+
+Your application can link and load the libjsig.so shared library before the libc/libthread/libpthread library. This library ensures that calls such as signal(), sigset(), and sigaction() are intercepted and don’t replace the signal handlers that are used by the HotSpot VM, if the handlers conflict with the signal handlers that are already installed by HotSpot VM. Instead, these calls save the new signal handlers. The new signal handlers are chained behind the HotSpot VM signal handlers for the signals. During execution, when any of these signals are raised and are not targeted at the HotSpot VM, the preinstalled handlers are invoked.
+
+If support for signal handler installation after the creation of the VM is not required, then the libjsig.so shared library is not needed.
+
+To enable signal chaining, perform one of the following procedures to use the libjsig.so shared library:
+
+Link the libjsig.so shared library with the application that creates or embeds the HotSpot VM:
+
+
+Copy
+cc -L libjvm.so-directory -ljsig -ljvm java_application.c
+Use the LD_PRELOAD environment variable:
+
+Korn shell (ksh):
+
+
+Copy
+export LD_PRELOAD=libjvm.so-directory/libjsig.so; java_application
+C shell (csh):
+
+
+Copy
+setenv LD_PRELOAD libjvm.so-directory/libjsig.so; java_application
+The interposed signal() , sigset() , and sigaction() calls return the saved signal handlers, not the signal handlers installed by the HotSpot VM and are seen by the operating system.
+
+Note:The SIGQUIT, SIGTERM, SIGINT, and SIGHUP signals cannot be chained. If the application must handle these signals, then consider using the —Xrs option.
+Enable Signal Chaining in macOS
+
+To enable signal chaining in macOS, set the following environment variables:
+
+DYLD_INSERT_LIBRARIES: Preloads the specified libraries instead of the LD_PRELOAD environment variable available on Linux.
+
+DYLD_FORCE_FLAT_NAMESPACE: Enables functions in the libjsig library and replaces the OS implementations, because of macOS’s two-level namespace (a symbol's fully qualified name includes its library). To enable this feature, set this environment variable to any value.
+
+The following command enables signal chaining by preloading the libjsig library:
+
+$ DYLD_FORCE_FLAT_NAMESPACE=0 DYLD_INSERT_LIBRARIES="JAVA_HOME/lib/libjsig.dylib" java MySpiffyJavaApp
+
+Note:The library file name on macOS is libjsig.dylib not libjsig.so as it is on Linux.
+Handle Exceptions Using the Java HotSpot VM
+The HotSpot VM installs a top-level exception handler during initialization using the AddVectoredExceptionHandlerAPI for 64-bit systems.
+
+It also installs the Win32 SEH using a __try /__except block in C++ around the thread (internal) start function call for each thread created.
+
+Finally, it installs an exception handler around JNI functions.
+
+If an application must handle structured exceptions in JNI code, then it can use __try /__except statements in C++. However, if it must use the vectored exception handler in JNI code, then the handler must return EXCEPTION_CONTINUE_SEARCH to continue to the VM's exception handler.
+
+In general, there are two categories in which exceptions happen:
+
+When exceptions are expected and handled. Examples include the implicit null handling cited, previously where accessing a null causes an EXCEPTION_ACCESS_VIOLATION, which is handled.
+
+Unexpected exceptions. An example is an EXCEPTION_ACCESS_VIOLATION when executing in VM code, in JNI code, or in native code. In these cases, the signal is unexpected, and fatal error handling is invoked to create the error log and terminate the process.
+
+Console Handlers
+This topic describes a list of console events that are registered with the Java HotSpot VM.
+
+The Java HotSpot VM registers console events, as shown in Table 8-1.
+
+Table 8-1 Console Events
+
+Console Event	Signal	Usage
+CTRL_C_EVENT
+
+SIGINT
+
+This event and signal is used to terminate a process. (Optional)
+
+CTRL_CLOSE_EVENTCTRL_LOGOFF_EVENTCTRL_SHUTDOWN_EVENT
+
+SIGTERM
+
+This event and signal is used by the shutdown hook mechanism when the VM is terminated abnormally. (Optional)
+
+CTRL_BREAK_EVENT
+
+SIGBREAK
+
+This event and signal is used to dump Java stack traces at the standard error stream. (Optional)
+
+If an application must register its own console handler, then the -Xrs option can be used. With this option, shutdown hooks are not run on SIGTERM (with the previously shown mapping of events), and thread dump support is not available on SIGBREAK (with the above mapping of the Control+Break event).
+
+Signals Used in Linux and macOS
+This topic describes a list of signals that are used on Linux and macOS
+
+Table 8-2 Signals Used on Linux and macOS
+
+Signal	Description
+SIGSEGV, SIGBUS, SIGFPE, SIGPIPE, SIGILL
+
+These signals are used in the implementation for implicit null check, and so forth.
+
+SIGQUIT
+
+This signal is used to dump Java stack traces to the standard error stream. (Optional)
+
+SIGTERM, SIGINT, SIGHUP
+
+These signals are used to support the shutdown hook mechanism (java.lang.Runtime.addShutdownHook) when the VM is terminated abnormally. (Optional)
+
+SIGUSR2
+
+This signal is used internally on Linux and macOS.
+
+SIGABRT
+
+The HotSpot VM does not handle this signal. Instead, it calls the abort function after fatal error handling. If an application uses this signal, then it should terminate the process to preserve the expected semantics.
+
+Signals tagged as "optional" are not used when the -Xrs option is specified to reduce signal usage. With this option, fewer signals are used, although the VM installs its own signal handler for essential signals such as SIGSEGV. Specifying this option means that the shutdown hook mechanism will not execute if the process receives a SIGQUIT, SIGTERM, SIGINT, or SIGHUP. Shutdown hooks will execute, as expected, if the VM terminates normally (that is, when the last non-daemon thread completes or the System.exit method is invoked).
+
+SIGUSR2 is used to implement, suspend, and resume on Linux and macOS. However, it is possible to specify an alternative signal to be used instead of SIGUSR2. This is done by specifying the _JAVA_SR_SIGNUM environment variable. If this environment variable is set, then it must be set to a value larger than the maximum of SIGSEGV and SIGBUS.

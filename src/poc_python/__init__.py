@@ -27,7 +27,7 @@ class Stage(Enum):
 
 # cache
 CACHE_LOCATION = join(ROOT_DIR, "generated_quizzes")
-MEM = Memory(location=CACHE_LOCATION)
+MEM = Memory(location=CACHE_LOCATION, verbose=0)
 
 # envs
 BYPASS_CACHE = os.environ.get("QUIZZER_BYPASS_CACHE") not in [None, ""]
