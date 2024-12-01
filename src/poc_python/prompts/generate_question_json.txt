@@ -1,0 +1,15 @@
+You are given the content on the subject of <SUBJECT_NAME>:
+{
+<TOPIC_CONTENT>
+},
+
+generate one quiz question based on this text and the theme of question is:
+{
+<TOPIC_NAME>
+}.
+
+The output should be in the format of JSON with the following fields:
+type: "OptionQuestion" // don't change this value
+question - string
+options - list of strings
+correct_answer - integer

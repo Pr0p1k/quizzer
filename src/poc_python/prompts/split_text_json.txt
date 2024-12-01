@@ -1,0 +1,13 @@
+Read the text and split into main chapters. The output should be in a format of JSON.
+Use the following fields for markup:
+chapter_name
+chapter_content
+
+The output structure should be:
+[
+{"chapter_name": *chapter_name*,
+ "chapter_content": *chapter_content*},
+*repeat for every chapter until the end of the file*
+]
+
+The input text is:

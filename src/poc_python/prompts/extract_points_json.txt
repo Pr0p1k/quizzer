@@ -1,0 +1,11 @@
+You are provided with a part of a book on the subject of <SUBJECT_NAME>,
+particular topic is <TOPIC_NAME>:
+"""
+<TOPIC_CONTENT>
+""".
+
+You need to extract the main points of this topic and sort them by importance (descending).
+
+The output should only contain the list of these points in the format of JSON array with following fields:
+number
+key_point

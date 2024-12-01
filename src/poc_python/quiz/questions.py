@@ -11,12 +11,18 @@ class Question(ABC):
     def evaluate_answer(self, answer: Any) -> bool:
         ...
 
+    @abstractmethod
+    def correct_answer(self):
+        ...
+
     @staticmethod
     def from_json_str(json_str: str) -> Question:
         data = json.loads(json_str)
         subclasses = Question.__all_subclasses(Question)
         question_type = data.pop("type")
-        cls = next(c for c in subclasses if c.__name__ == question_type) # TODO default
+
+        # find the class with the name of question type, e.g. OptionQuestion
+        cls = next(c for c in subclasses if c.__name__ == question_type)  # TODO default
         if not cls:
             raise Exception(f"Question type not found: {question_type}")
 
@@ -29,7 +35,6 @@ class Question(ABC):
 
 
 class OptionQuestion(Question):
-
     def __init__(self, question: str, options: list[str], correct_answer: int):
         self.text = question
         self.options = options
@@ -38,3 +43,5 @@ class OptionQuestion(Question):
     def evaluate_answer(self, answer: int) -> bool:
         return answer == self.answer
 
+    def correct_answer(self):
+        return self.answer

@@ -1,0 +1,27 @@
+# params for processors' setup (LLM or other type)
+[markup]
+approach = "SpacyAndRegex"
+verbose = false
+## the next are only if using LLM approach
+# n_ctx = 30000
+# temperature = 0
+# model_path = ""
+
+[key_points]
+n_ctx = 10000
+verbose = false
+model_path = "/Users/user/Library/Application Support/nomic.ai/GPT4All/Meta-Llama-3-8B-Instruct.Q4_0.gguf"
+
+[question]
+n_ctx = 10000
+verbose = false
+model_path = "/Users/user/Library/Application Support/nomic.ai/GPT4All/Meta-Llama-3-8B-Instruct.Q4_0.gguf"
+
+# params for actual generation
+[prompting.key_points]
+temperature = 0.9
+max_tokens=1000
+
+[prompting.question]
+temperature = 0.9
+max_tokens=1000

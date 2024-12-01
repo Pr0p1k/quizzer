@@ -1,2 +1,4 @@
 llama-cpp-python~=0.3.2
 joblib~=1.4.2
+dynaconf~=3.2.6
+typing_extensions~=4.12.2

@@ -1,18 +1,16 @@
 Read the text and split into main topics.
 Use the following tokens for markup:
 <TEXT_CONTENT_START>
-<TOPIC_NAME_START>
-<TOPIC_NAME_END>
-<TOPIC_CONTENT_START>
-<TOPIC_CONTENT_END>
+<TOPIC_NAME>
+<TOPIC_CONTENT>
 <TEXT_CONTENT_END>
 
 The output structure should be as following:
 <TEXT_CONTENT_START>
-<TOPIC_NAME_START>topic name<TOPIC_NAME_END>
-<TOPIC_CONTENT_START>
+<TOPIC_NAME>
+topic name
+<TOPIC_CONTENT>
 topic content
-<TOPIC_CONTENT_END>
 (repeat for every topic until the end of the file)
 
 <TEXT_CONTENT_END>
