@@ -19,6 +19,23 @@ n_ctx = 10000
 verbose = false
 model_path = "/Users/user/Library/Application Support/nomic.ai/GPT4All/Meta-Llama-3-8B-Instruct.Q4_0.gguf"
 
+[langgraph_split]
+approach = "SpacyAndRegexSplitter"
+verbose = false
+
+[langgraph_questions]
+approach = "LLMQuestionAnswerGenerator"
+n_ctx = 10000
+verbose = false
+model_path = "/Users/user/Library/Application Support/nomic.ai/GPT4All/Meta-Llama-3-8B-Instruct.Q4_0.gguf"
+
+[langgraph_enrich_question]
+approach = "LLMEnrichQuestion"
+n_ctx = 1000
+verbose = false
+model_path = "/Users/user/Library/Application Support/nomic.ai/GPT4All/Meta-Llama-3-8B-Instruct.Q4_0.gguf"
+
+
 # params for actual generation
 [prompting.key_points]
 temperature = 0.9

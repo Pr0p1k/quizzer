@@ -1,0 +1,11 @@
+For a given question:
+"""
+<QUESTION_TEXT>
+"""
+with the correct answer:
+"""
+<ANSWER>
+""",
+generate <AMOUNT> option(s) of similar, but incorrect answers.
+
+The output should be in the format of a JSON Array of strings.

@@ -1,7 +1,9 @@
+import json
 import os
 from enum import Enum
 from os.path import join
 from pathlib import Path
+from typing import TypedDict
 
 from joblib import Memory
 from dynaconf import Dynaconf
@@ -12,6 +14,11 @@ ROOT_DIR = Path(__file__).parents[2]
 SAMPLE_INPUTS = "sample_inputs"
 SAMPLE_OUTPUTS = "sample_outputs"
 
+STAGES = {
+    "LANGGRAPH_SPLIT": "langgraph_split",
+    "LANGGRAPH_QUESTIONS": "langgraph_questions",
+    "LANGGRAPH_ENRICH_QUESTION": "langgraph_enrich_question"
+}
 
 class Stage(Enum):
     """

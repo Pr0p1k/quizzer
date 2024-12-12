@@ -8,7 +8,7 @@ from src.poc_python import Stage, CONFIG
 class Processor(ABC):
 
     @abstractmethod
-    def process(self, input_text: str, **kwargs) -> dict:
+    def process(self, input_text: str, **kwargs) -> dict: # TODO remove the first arg and leave only the kwargs
         """
         Get the input text and produce the output based on the logic of implemented processor
         :param input_text: The input

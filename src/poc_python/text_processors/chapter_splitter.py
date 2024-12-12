@@ -10,14 +10,16 @@ from llama_cpp.llama_grammar import JSON_ARR_GBNF
 from src.poc_python.utils.input_utils import read_prompt_from_resource
 from src.poc_python.text_processors.processors import LlamaWrapper
 
+
 class SpacyAndRegexSplitter(Processor):
 
-    def process(self, input_text: str, **kwargs) -> dict:
+    def __init__(self):
         # Assuming chapter titles are standalone lines
         # TODO choose proper upper limit of word count (5)
-        chapter_title_pattern = re.compile(r"^(?:\s?[A-Za-z0-9]+){1,5}$", re.MULTILINE)
+        self.chapter_title_pattern = re.compile(r"^(?:\s?[A-Za-z0-9]+){1,5}$", re.MULTILINE)
 
-        chapter_matches = list(chapter_title_pattern.finditer(input_text))
+    def process(self, input_text: str, **kwargs) -> dict:
+        chapter_matches = list(self.chapter_title_pattern.finditer(input_text))
 
         # extract chapters and their names
         chapters_dicts = []
@@ -36,14 +38,13 @@ class SpacyAndRegexSplitter(Processor):
 
 
 class LLMSplitMarkup(Processor):
-    __prompt = read_prompt_from_resource("split_text_json") # TODO consider subchapters
+    __prompt = read_prompt_from_resource("split_text_json")  # TODO consider subchapters
 
     def __init__(self):
         self.model = LlamaWrapper(stage=Stage.MARKUP)
 
-
     def process(self, input_text: str, **kwargs) -> dict:
         return self.model.generate(
             prompt=LLMSplitMarkup.__prompt + input_text,
-            grammar=LlamaGrammar.from_string(JSON_ARR_GBNF) # TODO put it into config
+            grammar=LlamaGrammar.from_string(JSON_ARR_GBNF)  # TODO put it into config
         )
