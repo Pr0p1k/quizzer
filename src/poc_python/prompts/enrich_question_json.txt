@@ -1,11 +1,11 @@
 For a given question:
 """
-<QUESTION_TEXT>
+{{ question_text }}
 """
 with the correct answer:
 """
-<ANSWER>
+{{ correct_answer }}
 """,
-generate <AMOUNT> option(s) of similar, but incorrect answers.
+generate {{ num_of_options }} different options of similar, but incorrect answers.
 
 The output should be in the format of a JSON Array of strings.

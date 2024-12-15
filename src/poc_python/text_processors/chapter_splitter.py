@@ -38,7 +38,7 @@ class SpacyAndRegexSplitter(Processor):
 
 
 class LLMSplitMarkup(Processor):
-    __prompt = read_prompt_from_resource("split_text_json")  # TODO consider subchapters
+    __prompt = read_prompt_from_resource("split_text_json")
 
     def __init__(self):
         self.model = LlamaWrapper(stage=Stage.MARKUP)

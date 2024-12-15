@@ -1,7 +1,7 @@
-You are provided with a part of a book on the subject of <SUBJECT_NAME>,
-particular topic is <TOPIC_NAME>:
+You are provided with a part of a book on the subject of {{ general_subject }},
+particular topic is {{ chapter_name }}:
 """
-<TOPIC_CONTENT>
+{{ chapter_content }}
 """.
 
 You need to extract the main points of this topic and sort them by importance (descending).

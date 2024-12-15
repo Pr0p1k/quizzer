@@ -7,7 +7,7 @@ from colorama import init as colorama_init
 from colorama import Fore
 from colorama import Style
 
-from src.poc_python import ROOT_DIR, SAMPLE_INPUTS, BYPASS_CACHE, GENERATED_QUIZZES
+from src.poc_python import ROOT_DIR, SAMPLE_INPUTS, BYPASS_CACHE, GENERATED_QUIZZES, JINJA
 from src.poc_python.process_new_text_langgraph import process_text
 from src.poc_python.ui.cli.quiz_cli import QuizCliUi
 

@@ -1,12 +1,11 @@
-import json
 import os
 from enum import Enum
 from os.path import join
 from pathlib import Path
-from typing import TypedDict
 
-from joblib import Memory
 from dynaconf import Dynaconf
+from jinja2 import Environment, PackageLoader, select_autoescape
+from joblib import Memory
 
 # path to project root
 ROOT_DIR = Path(__file__).parents[2]
@@ -42,3 +41,6 @@ BYPASS_CACHE = os.environ.get("QUIZZER_BYPASS_CACHE") not in [None, ""]
 
 # config
 CONFIG = Dynaconf(settings_files=["llms.toml", "quiz.toml", "debug.toml"])
+
+# jinja
+JINJA = Environment(loader=PackageLoader("src.poc_python", "prompts"), autoescape=select_autoescape())

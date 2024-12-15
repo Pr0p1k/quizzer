@@ -1,9 +1,9 @@
-You are given the content on the subject of <SUBJECT_NAME>:
+You are given the content on the subject of {{ general_subject }}:
 {
-<TOPIC_CONTENT>
+{{ chapter_content }}
 },
 
-Generate <AMOUNT> question(s) and corresponding answers based on this text.
+Generate {{ amount }} question(s) and corresponding answers based on this text.
 
 The output should be in the format of JSON Array with the following fields:
 question: string

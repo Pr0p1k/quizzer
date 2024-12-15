@@ -19,6 +19,9 @@ class Processor(ABC):
 
 
 class LlamaWrapper:
+    """
+    A wrapper class to use local LLama
+    """
 
     def __init__(self, stage: Stage):
         global_conf = dict(CONFIG.__getattr__(stage.value))

@@ -34,24 +34,31 @@ class ProcessingState(TypedDict):
 
 
 def do_split(state: ProcessingState):
-    processor = get_processor_lazy(STAGES["LANGGRAPH_SPLIT"])
-    output_dict = processor.process(state["input_text"])
-    return {"stages_metadata": [(STAGES["LANGGRAPH_SPLIT"], output_dict)],
-            "chapters_json": split_markup_text_json(get_output(output_dict))}
+    logger.info(f"Started split stage for text '{state["name"]}'")
+    try:
+        processor = get_processor_lazy(STAGES["LANGGRAPH_SPLIT"])
+        output_dict = processor.process(state["input_text"])
+        return {"stages_metadata": [(STAGES["LANGGRAPH_SPLIT"], output_dict)],
+                "chapters_json": split_markup_text_json(get_output(output_dict))}
+    except Exception as e:
+        logger.error(e)
 
 
 def for_each_chapter(state: ProcessingState):
-    # for debug purposes
-    chapters_limit = CONFIG.debug.get("chapters_limit")
-    chapters = state["chapters_json"]
-    chapters = chapters[:chapters_limit] if chapters_limit else chapters
+    try:
+        # for debug purposes
+        chapters_limit = CONFIG.debug.get("chapters_limit")
+        chapters = state["chapters_json"]
+        chapters = chapters[:chapters_limit] if chapters_limit else chapters
 
-    return [Send("generate_questions_for_chapter",
-                 {
-                     "subject_name": state["name"],
-                     "amount": state["questions_per_chapter"]
-                 } | chapter)
-            for chapter in chapters]
+        return [Send("generate_questions_for_chapter",
+                     {
+                         "subject_name": state["name"],
+                         "amount": state["questions_per_chapter"]
+                     } | chapter)
+                for chapter in chapters]
+    except Exception as e:
+        logger.error(e)
 
 
 """
@@ -60,38 +67,58 @@ args: subject_name: str, chapter_name: str, chapter_content: str, amount: int
 
 
 def generate_questions_for_chapter(args: dict):
-    processor = get_processor_lazy(STAGES["LANGGRAPH_QUESTIONS"])  # TODO different stages
+    # args: chapter_name: str, subject_name: str, chapter_content: str, amount: int
 
-    questions_output_dict = processor.process(args["chapter_content"],
-                                              general_subject=args["subject_name"],
-                                              amount=args["amount"])
+    logger.info(f"Started question generation stage for chapter '{args["chapter_name"]}'")
 
-    questions_json = split_markup_text_json(get_output(questions_output_dict))
+    try:
+        processor = get_processor_lazy(STAGES["LANGGRAPH_QUESTIONS"])  # TODO different stages
 
-    return {"stages_metadata": [(STAGES["LANGGRAPH_QUESTIONS"], questions_output_dict)],
-            "chapters": {args["chapter_name"]: questions_json}}
+        questions_output_dict = processor.process(args["chapter_content"],
+                                                  general_subject=args["subject_name"],
+                                                  amount=args["amount"])
+
+        questions_json = split_markup_text_json(get_output(questions_output_dict))
+
+        return {"stages_metadata": [(STAGES["LANGGRAPH_QUESTIONS"], questions_output_dict)],
+                "chapters": {args["chapter_name"]: questions_json}}
+    except Exception as e:
+        logger.error(e)
 
 
 def for_each_question(state: ProcessingState):
-    questions = next(iter(state["chapters"].values()))  # todo get all questions
-    return [Send(STAGES["LANGGRAPH_ENRICH_QUESTION"],
-                 # {"question_text": json.loads(q)["question_text"], "correct_answer": json.loads(q)["correct_answer"],
-                 q | {"number_of_alternatives": 3}) for q in questions]
+    try:
+        questions = next(iter(state["chapters"].values()))  # todo get all questions
+        return [Send(STAGES["LANGGRAPH_ENRICH_QUESTION"],
+                     q | {"number_of_alternatives": 3}) for q in questions]
+    except Exception as e:
+        logger.error(e)
 
 
 def enrich_question(args: dict):
-    # question: str, correct_answer: str, number_of_alternatives: str
-    llm = get_processor_lazy(STAGES["LANGGRAPH_ENRICH_QUESTION"])
-    enriched_output_dict = llm.process(args["question"], correct_answer=args["correct_answer"],
-                                       amount=args["number_of_alternatives"])
-    enriched_output = get_output(enriched_output_dict)
+    # args: question: str, correct_answer: str, number_of_alternatives: str
 
-    return {"stages_metadata": [(STAGES["LANGGRAPH_ENRICH_QUESTION"], enriched_output_dict)],
-            "enriched_questions": {args["question"]: json.loads(enriched_output)}}
+    logger.info(f"Started question enrichment stage for question '{args["question"]}'")
+
+    try:
+        llm = get_processor_lazy(STAGES["LANGGRAPH_ENRICH_QUESTION"])  # TODO replace with a class with fields
+        enriched_output_dict = llm.process(args["question"], correct_answer=args["correct_answer"],
+                                           num_of_options=args["number_of_alternatives"])
+        enriched_output = get_output(enriched_output_dict)
+
+        return {"stages_metadata": [(STAGES["LANGGRAPH_ENRICH_QUESTION"], enriched_output_dict)],
+                "enriched_questions": {args["question"]: json.loads(enriched_output)}}
+    except Exception as e:
+        logger.error(e)
 
 
 def collect_all_questions(state: ProcessingState):
-    return {"summary": len(state["chapters"])}
+    logger.info("Collecting all questions")
+
+    try:
+        return {"summary": len(state["chapters"])}
+    except Exception as e:
+        logger.error(e)
 
 
 builder = StateGraph(ProcessingState)
@@ -115,7 +142,7 @@ memory_saver = MemorySaver()
 
 graph = builder.compile(checkpointer=memory_saver)
 
-config = {"configurable": {"thread_id": "1"}}  # TODO use some id
+config = {"configurable": {"thread_id": "3"}}  # TODO use some id
 
 
 def process_text(name: str, input_text: str, questions_per_chapter: int = 5):
