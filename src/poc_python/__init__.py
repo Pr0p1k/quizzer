@@ -13,6 +13,7 @@ ROOT_DIR = Path(__file__).parents[2]
 
 SAMPLE_INPUTS = "sample_inputs"
 SAMPLE_OUTPUTS = "sample_outputs"
+GENERATED_QUIZZES = "generated_quizzes"
 
 STAGES = {
     "LANGGRAPH_SPLIT": "langgraph_split",
@@ -40,4 +41,4 @@ MEM = Memory(location=CACHE_LOCATION, verbose=0)
 BYPASS_CACHE = os.environ.get("QUIZZER_BYPASS_CACHE") not in [None, ""]
 
 # config
-CONFIG = Dynaconf(settings_files=["llms.toml", "quiz.toml"])
+CONFIG = Dynaconf(settings_files=["llms.toml", "quiz.toml", "debug.toml"])

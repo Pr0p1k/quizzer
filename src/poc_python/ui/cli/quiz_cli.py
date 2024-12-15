@@ -1,10 +1,13 @@
+from __future__ import annotations
 from src.poc_python import CONFIG
-from src.poc_python.quiz.chapters import SuperChapter
+from src.poc_python.process_new_text_langgraph import ProcessingState
+from src.poc_python.quiz.chapters import SuperChapter, Chapter, SubChapter
 from src.poc_python.quiz.questions import Question
 from src.poc_python.quiz.quiz import Quiz
 from colorama import init as colorama_init
 from colorama import Fore
 from colorama import Style
+
 
 
 def get_prompt(question: Question, number: int):
@@ -25,6 +28,20 @@ class QuizCliUi:
         self.quiz = quiz
         self.give_answers = CONFIG.quiz_general.give_answers
 
+    @staticmethod
+    def from_state(state: ProcessingState) -> QuizCliUi:
+        chapters: list[Chapter] = []
+        for name, unenriched_questions in state["chapters"].items():
+            source_text = [chp["chapter_content"] for chp in state["chapters_json"] if
+                           chp["chapter_name"] == name][0]  # TODO assess case where more/less than 1 value
+            questions = [Question.from_fields("OptionQuestion",
+                                              q["question"],
+                                              q["correct_answer"],
+                                              state["enriched_questions"][q["question"]] + [q["correct_answer"]])
+                         for q in unenriched_questions]
+            chapters.append(SubChapter(name, source_text, questions))
+        return QuizCliUi(Quiz(state["name"], chapters))
+
     def start_quiz(self):
         colorama_init(autoreset=True)
         print(f"{Fore.GREEN}CLI Quiz on the subject of {Fore.BLUE}{self.name}")
@@ -38,7 +55,8 @@ class QuizCliUi:
             if isinstance(chapter, SuperChapter):
                 pass  # not implemented yet
             if True:  # isinstance(chapter, SubChapter): TODO WTF? isinstance doesn't work
-                print(f"Chapter {Fore.BLUE}{chapter.name}{Style.RESET_ALL}, {Fore.YELLOW}{chapter.questions_total()}{Style.RESET_ALL} questions:")
+                print(
+                    f"Chapter {Fore.BLUE}{chapter.name}{Style.RESET_ALL}, {Fore.YELLOW}{chapter.questions_total()}{Style.RESET_ALL} questions:")
                 for number, question in enumerate(chapter.questions):
                     questions_seen_total += 1
                     answer = input(get_prompt(question, number))
@@ -53,4 +71,5 @@ class QuizCliUi:
 
                     print("-" * 100)
 
-        print(f"Quiz finished with score: {Fore.YELLOW}{score} of {questions_seen_total}{Style.RESET_ALL} questions passed.")
+        print(
+            f"Quiz finished with score: {Fore.YELLOW}{score} of {questions_seen_total}{Style.RESET_ALL} questions passed.")

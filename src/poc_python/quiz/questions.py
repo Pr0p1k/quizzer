@@ -20,7 +20,6 @@ class Question(ABC):
     @staticmethod
     def from_json_str(json_str: str) -> Question:
         data = json.loads(json_str)
-        subclasses = Question.__all_subclasses(Question)
         question_type = data.pop("type")
 
         # find the class with the name of question type, e.g. OptionQuestion
@@ -29,10 +28,10 @@ class Question(ABC):
         return cls(**data)
 
     @staticmethod
-    def __all_subclasses(cls) -> set:
-        return set(cls.__subclasses__()).union(
-            [s for c in cls.__subclasses__() for s in Question.__all_subclasses(c)])
+    def from_fields(question_type: str, question: str, correct_answer: str, options: list[str]):
+        cls = find_subclass_by_name(Question, question_type) # currently only OptionQuestion is implemented anyway
 
+        return cls(question=question, correct_answer=correct_answer, options=options)
 
 class OptionQuestion(Question):
     def __init__(self, question: str, options: list[str], correct_answer: str):
