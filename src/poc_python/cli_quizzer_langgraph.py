@@ -1,7 +1,6 @@
 import json
 import os.path
 import time
-import uuid
 from os import listdir
 from os.path import join, isfile, isdir
 from colorama import init as colorama_init
@@ -33,41 +32,43 @@ def num_of_processed_versions(file_name: str) -> int:
     return 0
 
 
+def main():
+    found_files = [(f, num_of_processed_versions(f)) for f in listdir(SOURCES_PATH) if isfile(join(SOURCES_PATH, f))]
 
-found_files = [(f, num_of_processed_versions(f)) for f in listdir(SOURCES_PATH) if isfile(join(SOURCES_PATH, f))]
+    texts = list(map(lambda num_to_file:
+                     f"{num_to_file[0] + 1}. {Fore.BLUE}{num_to_file[1][0]}{Style.RESET_ALL}" +
+                     f" -> {
+                     f"{Fore.GREEN}Already processed{Style.RESET_ALL} - {num_to_file[1][1]} version(s)" if num_to_file[1][1] > 0
+                     else
+                     f"{Fore.RED}Not yet processed{Style.RESET_ALL}"}",
+                     enumerate(found_files)))
 
+    colorama_init(autoreset=True)
 
-texts = list(map(lambda num_to_file:
-                 f"{num_to_file[0] + 1}. {Fore.BLUE}{num_to_file[1][0]}{Style.RESET_ALL}" +
-                 f" -> {
-                 f"{Fore.GREEN}Already processed{Style.RESET_ALL} - {num_to_file[1][1]} version(s)" if num_to_file[1][1] > 0
-                 else
-                 f"{Fore.RED}Not yet processed{Style.RESET_ALL}"}",
-                 enumerate(found_files)))
+    print(f"Found following texts:\n    {'\n    '.join(texts)}")
 
-colorama_init(autoreset=True)
+    text_number = int(input("Select the number of a text to start quiz: "))
 
-print(f"Found following texts:\n    {'\n    '.join(texts)}")
+    (selected_file_name, num_of_versions) = found_files[text_number - 1]
 
-text_number = int(input("Select the number of a text to start quiz: "))
+    # if there's no versions processed or set to bypass the cache
+    if num_of_versions == 0 or BYPASS_CACHE:
+        display_name = get_text_name(selected_file_name)
+        text = open(join(ROOT_DIR, SAMPLE_INPUTS, selected_file_name)).read()
+        result = process_text(display_name, text)
 
-(selected_file_name, num_of_versions) = found_files[text_number - 1]
+        with open(join(GENERATED_QUIZZES_PATH, selected_file_name, str(int(time.time())) + ".json"), "w") as output_file:
+            output_file.write(json.dumps(result))
+    else:
+        # names are <timestamp>.json, str comparison is fine due to slowly changing length of timestamps
+        latest_version = max(listdir(join(GENERATED_QUIZZES_PATH, selected_file_name)))
 
-# if there's no versions processed or set to bypass the cache
-if num_of_versions == 0 or BYPASS_CACHE:
-    display_name = get_text_name(selected_file_name)
-    text = open(join(ROOT_DIR, SAMPLE_INPUTS, selected_file_name)).read()
-    result = process_text(display_name, text)
+        with open(join(GENERATED_QUIZZES_PATH, selected_file_name, latest_version)) as json_file:
+            result = json.loads(json_file.read())
 
-    with open(join(GENERATED_QUIZZES_PATH, selected_file_name, str(int(time.time())) + ".json"), "w") as output_file:
-        output_file.write(json.dumps(result))
-else:
-    # names are <timestamp>.json, str comparison is fine due to slowly changing length of timestamps
-    latest_version = max(listdir(join(GENERATED_QUIZZES_PATH, selected_file_name)))
+    quiz_cli = QuizCliUi.from_state(result)
 
-    with open(join(GENERATED_QUIZZES_PATH, selected_file_name, latest_version)) as json_file:
-        result = json.loads(json_file.read())
+    quiz_cli.start_quiz()
 
-quiz_cli = QuizCliUi.from_state(result)
-
-quiz_cli.start_quiz()
+if __name__ == "__main__":
+    main()

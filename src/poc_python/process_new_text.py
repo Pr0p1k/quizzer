@@ -14,18 +14,18 @@ logger = logging.getLogger(__name__)
 
 @MEM.cache()
 def generate_markup(text: str) -> dict:
-    processor = get_processor_lazy(Stage.MARKUP)
+    processor = get_processor_lazy(Stage.MARKUP.value)
     return processor.process(text)
 
 @MEM.cache()
 def generate_key_points(subject_name: str, chapter_name: str, chapter_content: str, amount: int) -> dict:
-    processor = get_processor_lazy(Stage.KEY_POINTS)
+    processor = get_processor_lazy(Stage.KEY_POINTS.value)
     return processor.process(chapter_content, general_subject=subject_name, chapter_name=chapter_name)
 
 
 @MEM.cache()
 def generate_question(chapter_name: str, chapter_content: str, key_point: str, question_type: str) -> dict:
-    llm = get_processor_lazy(Stage.QUESTION)
+    llm = get_processor_lazy(Stage.QUESTION.value)
     return llm.process(chapter_content, key_point=key_point, general_subject=chapter_name)
 
 # TODO change text: str to some local type. Can later be pdf, video, etc. Need to create processors per type

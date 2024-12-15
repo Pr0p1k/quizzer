@@ -1,13 +1,14 @@
 from __future__ import annotations
-from src.poc_python import CONFIG
-from src.poc_python.process_new_text_langgraph import ProcessingState
-from src.poc_python.quiz.chapters import SuperChapter, Chapter, SubChapter
-from src.poc_python.quiz.questions import Question
-from src.poc_python.quiz.quiz import Quiz
-from colorama import init as colorama_init
+
 from colorama import Fore
 from colorama import Style
+from colorama import init as colorama_init
 
+from src.poc_python import CONFIG
+from src.poc_python.process_new_text_langgraph import ProcessingState
+from src.poc_python.quiz.chapters import Chapter, SubChapter
+from src.poc_python.quiz.questions import Question, OptionQuestion
+from src.poc_python.quiz.quiz import Quiz
 
 
 def get_prompt(question: Question, number: int):
@@ -16,7 +17,7 @@ def get_prompt(question: Question, number: int):
             lambda num_str: f"{' ' * 8}{num_str[0] + 1}. {num_str[1]}\n",
             enumerate(question.options)
         )
-    )  # if isinstance(question, OptionQuestion) else "" TODO isinstance
+    ) if isinstance(question, OptionQuestion) else ""
     return (f"    {Fore.BLUE}Question {number + 1}: {Style.RESET_ALL}{question.text}\n\n" +
             f"    {Fore.BLUE}Options:\n{Style.RESET_ALL}{''.join(options)}\n\n")
 
@@ -52,9 +53,7 @@ class QuizCliUi:
         score = 0
 
         for chapter in quiz.chapters:
-            if isinstance(chapter, SuperChapter):
-                pass  # not implemented yet
-            if True:  # isinstance(chapter, SubChapter): TODO WTF? isinstance doesn't work
+            if isinstance(chapter, SubChapter):
                 print(
                     f"Chapter {Fore.BLUE}{chapter.name}{Style.RESET_ALL}, {Fore.YELLOW}{chapter.questions_total()}{Style.RESET_ALL} questions:")
                 for number, question in enumerate(chapter.questions):
@@ -70,6 +69,8 @@ class QuizCliUi:
                             f"{Fore.LIGHTGREEN_EX}Correct." if is_correct else f"{Fore.LIGHTRED_EX}Incorrect, correct answer: {Fore.BLUE}{question.correct_answer()}")
 
                     print("-" * 100)
+            else:
+                pass # TODO implement for SuperChapters
 
         print(
             f"Quiz finished with score: {Fore.YELLOW}{score} of {questions_seen_total}{Style.RESET_ALL} questions passed.")
