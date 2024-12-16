@@ -5,18 +5,32 @@
 
 ### Quiz generation from arbitrary texts (potentially from video and audio as well)
 
-### Currently consists of three layers:
+### Two approaches currently:
+#### First
 
-1. **Markup** - split the text into chapter
+1. **Split** - split the text into chapters
 2. **Key Points** - extract most important points from each chapter
-3. **Question** - generation of questions
+3. **Question** - generation of questions for each key point
+
+#### Second
+1. **Split** - split the text into chapters
+2. **Question-answer Generation** - generate a number of question-answer pairs for each chapter
+3. **Question Enrichment** - Add incorrect options for each previously generated question
+
+Orchestrated by langgraph
 
 ### Layers are currently implemented as:
-1. **Markup** 
+**Split** 
    1. Regex parser - **default**, later to be improved with cosine similarities from spaCy
    2. LLM prompting - straightforward, but super expensive for such a task
-2. **Key Points** - LLM prompting
-3. **Question** - LLM prompting
+
+**Key Points** - LLM prompting
+
+**Question** - LLM prompting
+
+**Question-answer Generation** - LLM prompting
+
+**Question Enrichment** - LLM prompting
 
 #### Currently used LLM is a local LlaMA specified in [llms.toml](src/poc_python/config/llms.toml)
 
