@@ -3,7 +3,7 @@ You are given the content on the subject of {{ general_subject }}:
 {{ chapter_content }}
 },
 
-Generate {{ amount }} question(s) and corresponding answers based on this text.
+Generate {{ amount }} question(s) and a single corresponding answer to each based on this text.
 
 The output should be in the format of JSON Array with the following fields:
 question: string
