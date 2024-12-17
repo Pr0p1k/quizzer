@@ -1,0 +1,3 @@
+# [llm_global]
+# type - "local" or "openai"
+# model_path - specify path to gguf file when type is "local"
