@@ -32,12 +32,12 @@ Orchestrated by langgraph
 
 **Question Enrichment** - LLM prompting
 
-#### Currently used LLM is a local LlaMA specified in [llms.toml](src/poc_python/config/llms.toml)
+#### Currently used LLM is a local LlaMA specified in [llms.toml](src/poc_python/config/stages.toml)
 
 ## Setup
 1. Download the sourcecode of the repo
 2. install llama_cpp (requires compiling cpp lib first)
-3. download an LLM .gguf file and specify the path in [llms.toml](src/poc_python/config/llms.toml) in __model_path__ vars
+3. download an LLM .gguf file and specify the path in [llms.toml](src/poc_python/config/stages.toml) in __model_path__ vars
 4. add source texts to <project_root>/sample_inputs (only plain text is supported yet)
 
 ## Run

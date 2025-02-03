@@ -19,11 +19,6 @@ def get_text_name(file_name: str) -> str:
     return os.path.splitext(file_name)[0].replace("_", " ").title()
 
 
-def read_file(file_name: str) -> str:
-    with open(join(ROOT_DIR, SAMPLE_INPUTS, file_name)) as file:
-        return file.read()
-
-
 def num_of_processed_versions(file_name: str) -> int:
     # if it was processed before, it is saved as a dir with the same name as source file
     cache_dir = join(GENERATED_QUIZZES_PATH, file_name)

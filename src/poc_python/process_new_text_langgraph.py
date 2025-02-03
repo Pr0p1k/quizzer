@@ -78,7 +78,7 @@ def generate_questions_for_chapter(args: dict):
                                                   general_subject=args["subject_name"],
                                                   amount=args["amount"])
 
-        questions_json = split_markup_text_json(get_output(questions_output_dict))
+        questions_json = split_markup_text_json(questions_output_dict)
 
         return {"stages_metadata": [(STAGES["LANGGRAPH_QUESTIONS"], questions_output_dict)],
                 "chapters": {args["chapter_name"]: questions_json}}

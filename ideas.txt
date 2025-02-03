@@ -9,9 +9,7 @@ Train on separate subjects depending on the text: science, fiction, art, politic
 
 add references to the source text for the questions. Option to give a vague direction. (approximate pages, paragraph)
 
-
-when generating the question, give instruction to come up with fake answer options if can't find enough options in the source text
-
 Have an ability to propose a correction (if the question answer is incorrect)
 
-Change the question layer to only select a question and a correct answer, and add a layer to add fake answers/enrich options
+
+RAG? Load the text and do each question with separate query

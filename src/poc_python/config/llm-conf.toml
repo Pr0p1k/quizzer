@@ -1,0 +1,16 @@
+# [llm_global]
+# type - "local" or "openai"
+# model_path - specify path to gguf file when type is "local"
+# verbose - boolean, whether to write verbose logs
+
+
+
+[llm_global]
+type = "local"
+model_path = "/Users/user/Library/Application Support/nomic.ai/GPT4All/Meta-Llama-3-8B-Instruct.Q4_0.gguf"
+n_batch=512
+n_ctx=1000 # TODO move somewhere else
+rope_freq_base=500000
+verbose = false
+
+# TODO custiomisations per stage

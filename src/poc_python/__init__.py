@@ -40,7 +40,7 @@ MEM = Memory(location=CACHE_LOCATION, verbose=0)
 BYPASS_CACHE = os.environ.get("QUIZZER_BYPASS_CACHE") not in [None, ""]
 
 # config
-CONFIG = Dynaconf(settings_files=["llms.toml", "quiz.toml", "debug.toml"])
+CONFIG = Dynaconf(settings_files=["stages.toml", "llm-conf.toml", "quiz.toml", "debug.toml"])
 
 # jinja
 JINJA = Environment(loader=PackageLoader("src.poc_python", "prompts"), autoescape=select_autoescape())
