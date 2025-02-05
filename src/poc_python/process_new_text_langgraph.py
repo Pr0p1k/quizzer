@@ -8,7 +8,8 @@ from langgraph.constants import END, START
 from langgraph.graph import StateGraph
 from langgraph.types import Send
 
-from src.poc_python import STAGES, CONFIG
+from src.poc_python import CONFIG
+from src.poc_python.stages_approaches import STAGES
 from src.poc_python.text_processors.processor_provider import get_processor_lazy
 from src.poc_python.utils.output_utils import get_output, split_markup_text_json
 
@@ -72,13 +73,13 @@ def generate_questions_for_chapter(args: dict):
     logger.info(f"Started question generation stage for chapter '{args["chapter_name"]}'")
 
     try:
-        processor = get_processor_lazy(STAGES["LANGGRAPH_QUESTIONS"])  # TODO different stages
+        processor = get_processor_lazy(STAGES["LANGGRAPH_QUESTIONS"])
 
         questions_output_dict = processor.process(args["chapter_content"],
                                                   general_subject=args["subject_name"],
                                                   amount=args["amount"])
 
-        questions_json = split_markup_text_json(questions_output_dict)
+        questions_json = split_markup_text_json(questions_output_dict) # TODO OUTPUT JSON
 
         return {"stages_metadata": [(STAGES["LANGGRAPH_QUESTIONS"], questions_output_dict)],
                 "chapters": {args["chapter_name"]: questions_json}}

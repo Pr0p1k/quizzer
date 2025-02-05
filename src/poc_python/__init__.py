@@ -2,6 +2,7 @@ import os
 from enum import Enum
 from os.path import join
 from pathlib import Path
+from typing_extensions import deprecated
 
 from dynaconf import Dynaconf
 from jinja2 import Environment, PackageLoader, select_autoescape
@@ -14,12 +15,8 @@ SAMPLE_INPUTS = "sample_inputs"
 SAMPLE_OUTPUTS = "sample_outputs"
 GENERATED_QUIZZES = "generated_quizzes"
 
-STAGES = {
-    "LANGGRAPH_SPLIT": "langgraph_split",
-    "LANGGRAPH_QUESTIONS": "langgraph_questions",
-    "LANGGRAPH_ENRICH_QUESTION": "langgraph_enrich_question"
-}
 
+@deprecated("using strings for stage names")
 class Stage(Enum):
     """
     Represents the Stage of quiz creation.

@@ -31,7 +31,7 @@ class LLMQuestionAnswerGenerator(Processor):
     __prompt_template = JINJA.get_template("generate_question_and_answer_json.txt")
 
     def __init__(self):
-        self.model = get_llm(stage="") # TODO stage
+        self.model = get_llm()
 
     def process(self, chapter_content: str, **kwargs) -> dict:
         """
@@ -40,8 +40,8 @@ class LLMQuestionAnswerGenerator(Processor):
         """
         return self.model.invoke(
             input=self.__prompt_template.render(chapter_content=chapter_content, **kwargs),
-            grammar=LlamaGrammar.from_string(JSON_ARR_GBNF)  # output in json array
-        ) # TODO
+            # grammar=LlamaGrammar.from_string(JSON_ARR_GBNF)  # output in json array TODO put in a config
+        )
 
 
 class LLMEnrichQuestion(Processor):
@@ -51,7 +51,7 @@ class LLMEnrichQuestion(Processor):
     __prompt_template = JINJA.get_template("enrich_question_json.txt")
 
     def __init__(self):
-        self.model = LlamaWrapper(stage=Stage.QUESTION)
+        self.model = get_llm()
 
     def process(self, question_text: str, **kwargs) -> dict:
         """
@@ -60,7 +60,7 @@ class LLMEnrichQuestion(Processor):
             correct_answer: str - the correct answer
             num_of_options: int - amount of incorrect answers to generate
         """
-        return self.model.generate(
-            prompt=self.__prompt_template.render(question_text=question_text, **kwargs),
-            grammar=LlamaGrammar.from_string(JSON_ARR_GBNF)  # output in json array
+        return self.model.invoke(
+            input=self.__prompt_template.render(question_text=question_text, **kwargs),
+            # grammar=LlamaGrammar.from_string(JSON_ARR_GBNF)  # output in json array TODO put in a config
         )
