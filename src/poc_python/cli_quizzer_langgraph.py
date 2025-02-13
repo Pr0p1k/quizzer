@@ -7,7 +7,7 @@ from colorama import Style
 from colorama import init as colorama_init
 
 from src.poc_python import ROOT_DIR, SAMPLE_INPUTS, BYPASS_CACHE, GENERATED_QUIZZES
-from src.poc_python.process_new_text_langgraph import process_text
+from src.poc_python.approaches.split_generate_enrich import SplitGenerateEnrich
 from src.poc_python.ui.cli.quiz_cli import QuizCliUi
 from src.poc_python.utils.output_utils import persist_generated, load_generated
 
@@ -51,7 +51,16 @@ def main():
     if num_of_versions == 0 or BYPASS_CACHE:
         display_name = get_text_name(selected_file_name)
         text = open(join(ROOT_DIR, SAMPLE_INPUTS, selected_file_name)).read()
-        result = process_text(display_name, text)
+
+        graph = SplitGenerateEnrich().get_langgraph_graph()
+
+        config = {"configurable": {"thread_id": "3"}}  # TODO use some id
+
+        result = graph.invoke({
+            "name": display_name,
+            "input_text": text,
+            "questions_per_chapter": 5
+        }, config)
 
         persist_generated(GENERATED_QUIZZES_PATH, selected_file_name, result)
     else:

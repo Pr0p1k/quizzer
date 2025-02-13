@@ -1,5 +1,5 @@
 from llama_cpp import LlamaGrammar
-from llama_cpp.llama_grammar import JSON_GBNF, JSON_ARR_GBNF
+from llama_cpp.llama_grammar import JSON_GBNF
 
 from src.poc_python import Stage, JINJA
 from src.poc_python.text_processors.processor_provider import get_llm
@@ -40,7 +40,6 @@ class LLMQuestionAnswerGenerator(Processor):
         """
         return self.model.invoke(
             input=self.__prompt_template.render(chapter_content=chapter_content, **kwargs),
-            # grammar=LlamaGrammar.from_string(JSON_ARR_GBNF)  # output in json array TODO put in a config
         )
 
 
@@ -62,5 +61,4 @@ class LLMEnrichQuestion(Processor):
         """
         return self.model.invoke(
             input=self.__prompt_template.render(question_text=question_text, **kwargs),
-            # grammar=LlamaGrammar.from_string(JSON_ARR_GBNF)  # output in json array TODO put in a config
         )

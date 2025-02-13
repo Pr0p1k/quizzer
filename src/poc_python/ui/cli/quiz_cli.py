@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from random import shuffle
+
 from colorama import Fore
 from colorama import Style
 from colorama import init as colorama_init
@@ -18,8 +20,25 @@ def get_prompt(question: Question, number: int):
             enumerate(question.options)
         )
     ) if isinstance(question, OptionQuestion) else ""
+
     return (f"    {Fore.BLUE}Question {number + 1}: {Style.RESET_ALL}{question.text}\n\n" +
             f"    {Fore.BLUE}Options:\n{Style.RESET_ALL}{''.join(options)}\n\n")
+
+
+def join_and_shuffle_answer_options(state: ProcessingState, q: dict) -> list[str]:
+    options = state["enriched_questions"][q["question"]]
+    # workaround for cases where LLM returns dict instead of a list
+    if isinstance(options, dict):
+        if len(options) == 1:
+            options = list(options.values())[0]  # extract nested list
+        else:
+            options = list(options.values())  # extract named entries
+
+    options.append(q["correct_answer"])
+
+    shuffle(options)
+
+    return options
 
 
 class QuizCliUi:
@@ -38,7 +57,7 @@ class QuizCliUi:
             questions = [Question.from_fields("OptionQuestion",
                                               q["question"],
                                               q["correct_answer"],
-                                              state["enriched_questions"][q["question"]] + [q["correct_answer"]])
+                                              join_and_shuffle_answer_options(state, q))
                          for q in unenriched_questions]
             chapters.append(SubChapter(name, source_text, questions))
         return QuizCliUi(Quiz(state["name"], chapters))
@@ -70,7 +89,7 @@ class QuizCliUi:
 
                     print("-" * 100)
             else:
-                pass # TODO implement for SuperChapters
+                pass  # TODO implement for SuperChapters
 
         print(
             f"Quiz finished with score: {Fore.YELLOW}{score} of {questions_seen_total}{Style.RESET_ALL} questions passed.")
