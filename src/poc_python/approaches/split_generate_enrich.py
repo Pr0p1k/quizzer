@@ -9,6 +9,7 @@ from langgraph.graph import StateGraph
 from langgraph.types import Send
 
 from src.poc_python import CONFIG
+from src.poc_python.approaches.shared import ProcessingState, do_split
 from src.poc_python.stages_approaches import STAGES
 from src.poc_python.text_processors.processor_provider import get_processor_lazy
 from src.poc_python.utils.output_utils import get_output, split_markup_text_json
@@ -21,26 +22,12 @@ logger = logging.getLogger(__name__)
 
 
 class SplitGenerateEnrich(Approach):
-    class ProcessingState(TypedDict):
-        name: str
-        input_text: str
-        questions_per_chapter: int  # amount of question to generate per chapter
-
-        stages_metadata: Annotated[list[tuple[str, Any]], operator.add]
-
-        # to be filled by split stage
-        chapters_json: list[dict]
-        # {chapter_name: [{question}, ...]}
-        chapters: Annotated[dict, operator.or_]
-        # place additional answers here. {(question, answer): [options]}
-        enriched_questions: Annotated[dict, operator.or_]
-        summary: Any
 
     def get_langgraph_graph(self):
 
-        builder = StateGraph(SplitGenerateEnrich.ProcessingState)
+        builder = StateGraph(ProcessingState)
 
-        builder.add_node(STAGES["LANGGRAPH_SPLIT"], self.__do_split)
+        builder.add_node(STAGES["LANGGRAPH_SPLIT"], do_split)
         builder.add_node("generate_questions_for_chapter", self.__generate_questions_for_chapter)
         builder.add_node(STAGES["LANGGRAPH_ENRICH_QUESTION"], self.__enrich_question)
         builder.add_node("collect_all_questions", self.__collect_all_questions)
@@ -58,18 +45,6 @@ class SplitGenerateEnrich(Approach):
         memory_saver = MemorySaver()
 
         return builder.compile(checkpointer=memory_saver)
-
-    # TODO move to an upper lvl, share between approaches
-    @staticmethod
-    def __do_split(state: ProcessingState):
-        logger.info(f"Started split stage for text '{state["name"]}'")
-        try:
-            processor = get_processor_lazy(STAGES["LANGGRAPH_SPLIT"])
-            output_dict = processor.process(state["input_text"])
-            return {"stages_metadata": [(STAGES["LANGGRAPH_SPLIT"], output_dict)],
-                    "chapters_json": split_markup_text_json(get_output(output_dict))}
-        except Exception as e:
-            logger.error(e)
 
     @staticmethod
     def __for_each_chapter(state: ProcessingState):

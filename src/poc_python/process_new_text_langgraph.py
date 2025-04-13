@@ -79,7 +79,7 @@ def generate_questions_for_chapter(args: dict):
                                                   general_subject=args["subject_name"],
                                                   amount=args["amount"])
 
-        questions_json = split_markup_text_json(questions_output_dict) # TODO OUTPUT JSON
+        questions_json = split_markup_text_json(questions_output_dict)  # TODO OUTPUT JSON
 
         return {"stages_metadata": [(STAGES["LANGGRAPH_QUESTIONS"], questions_output_dict)],
                 "chapters": {args["chapter_name"]: questions_json}}
@@ -122,31 +122,30 @@ def collect_all_questions(state: ProcessingState):
         logger.error(e)
 
 
-builder = StateGraph(ProcessingState)
-
-builder.add_node(STAGES["LANGGRAPH_SPLIT"], do_split)
-builder.add_node("generate_questions_for_chapter", generate_questions_for_chapter)
-builder.add_node(STAGES["LANGGRAPH_ENRICH_QUESTION"], enrich_question)
-builder.add_node("collect_all_questions", collect_all_questions)
-
-builder.add_edge(START, STAGES["LANGGRAPH_SPLIT"])
-builder.add_conditional_edges(STAGES["LANGGRAPH_SPLIT"],
-                              for_each_chapter,
-                              ["generate_questions_for_chapter"])
-builder.add_conditional_edges("generate_questions_for_chapter",
-                              for_each_question,
-                              [STAGES["LANGGRAPH_ENRICH_QUESTION"]])
-builder.add_edge(STAGES["LANGGRAPH_ENRICH_QUESTION"], "collect_all_questions")
-builder.add_edge("collect_all_questions", END)
-
-memory_saver = MemorySaver()
-
-graph = builder.compile(checkpointer=memory_saver)
-
-config = {"configurable": {"thread_id": "3"}}  # TODO use some id
-
-
 def process_text(name: str, input_text: str, questions_per_chapter: int = 5):
+    builder = StateGraph(ProcessingState)
+
+    builder.add_node(STAGES["LANGGRAPH_SPLIT"], do_split)
+    builder.add_node("generate_questions_for_chapter", generate_questions_for_chapter)
+    builder.add_node(STAGES["LANGGRAPH_ENRICH_QUESTION"], enrich_question)
+    builder.add_node("collect_all_questions", collect_all_questions)
+
+    builder.add_edge(START, STAGES["LANGGRAPH_SPLIT"])
+    builder.add_conditional_edges(STAGES["LANGGRAPH_SPLIT"],
+                                  for_each_chapter,
+                                  ["generate_questions_for_chapter"])
+    builder.add_conditional_edges("generate_questions_for_chapter",
+                                  for_each_question,
+                                  [STAGES["LANGGRAPH_ENRICH_QUESTION"]])
+    builder.add_edge(STAGES["LANGGRAPH_ENRICH_QUESTION"], "collect_all_questions")
+    builder.add_edge("collect_all_questions", END)
+
+    memory_saver = MemorySaver()
+
+    graph = builder.compile(checkpointer=memory_saver)
+
+    config = {"configurable": {"thread_id": "3"}}  # TODO use some id
+
     return graph.invoke({
         "name": name,
         "input_text": input_text,

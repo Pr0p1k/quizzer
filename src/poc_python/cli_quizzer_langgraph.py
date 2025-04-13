@@ -7,7 +7,7 @@ from colorama import Style
 from colorama import init as colorama_init
 
 from src.poc_python import ROOT_DIR, SAMPLE_INPUTS, BYPASS_CACHE, GENERATED_QUIZZES
-from src.poc_python.approaches.split_generate_enrich import SplitGenerateEnrich
+from src.poc_python.approaches.split_rag_generate import SplitRagGenerate
 from src.poc_python.ui.cli.quiz_cli import QuizCliUi
 from src.poc_python.utils.output_utils import persist_generated, load_generated
 
@@ -52,7 +52,7 @@ def main():
         display_name = get_text_name(selected_file_name)
         text = open(join(ROOT_DIR, SAMPLE_INPUTS, selected_file_name)).read()
 
-        graph = SplitGenerateEnrich().get_langgraph_graph()
+        graph = SplitRagGenerate().get_langgraph_graph() # TODO get the approach from config
 
         config = {"configurable": {"thread_id": "3"}}  # TODO use some id
 
