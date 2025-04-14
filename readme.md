@@ -73,3 +73,8 @@ Orchestrated by langgraph
 ### Paraphrasing is still a problem to be solved (see question 6):
 
 ![questions.png](readme_imgs/questions.png)
+
+
+## Planned Architecture
+![arch.png](readme_imgs/arch.png)
+
