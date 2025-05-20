@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
 
-from llama_cpp import Llama, LlamaGrammar
-
 from src.poc_python import Stage, CONFIG
 
 
@@ -24,11 +22,14 @@ class LlamaWrapper:
     """
 
     def __init__(self, stage: Stage):
+        # avoid top-level import if no llama is installed
+        from llama_cpp import Llama, LlamaGrammar
+
         global_conf = dict(CONFIG.__getattr__(stage.value))
         self.prompting_conf = dict(CONFIG.__getattr__("prompting").__getattr__(stage.value))
         self.model = Llama(**global_conf)
 
-    def generate(self, prompt: str, grammar: LlamaGrammar) -> dict:
+    def generate(self, prompt: str, grammar: "LlamaGrammar") -> dict:
         response = self.model(prompt, **self.prompting_conf, grammar=grammar)  # TODO grammar should be put into config
 
         return response

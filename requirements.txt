@@ -1,4 +1,4 @@
-llama-cpp-python~=0.3.2
+#llama-cpp-python~=0.3.2
 joblib~=1.4.2
 dynaconf~=3.2.6
 typing_extensions~=4.12.2
@@ -14,3 +14,4 @@ nltk~=3.9.1
 scikit-learn~=1.5.2
 langchain-openai~=0.2.12
 langchain-text-splitters~=0.3.2
+python-dotenv~=1.1.0

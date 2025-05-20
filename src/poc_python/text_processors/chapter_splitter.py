@@ -4,9 +4,6 @@ import re
 from src.poc_python import Stage
 from src.poc_python.text_processors.processors import Processor
 
-from llama_cpp import LlamaGrammar
-from llama_cpp.llama_grammar import JSON_ARR_GBNF
-
 from src.poc_python.utils.input_utils import read_prompt_from_resource
 from src.poc_python.text_processors.processors import LlamaWrapper
 
@@ -38,12 +35,17 @@ class SpacyAndRegexSplitter(Processor):
 
 
 class LLMSplitMarkup(Processor):
+
     __prompt = read_prompt_from_resource("split_text_json")
 
     def __init__(self):
         self.model = LlamaWrapper(stage=Stage.MARKUP)
 
     def process(self, input_text: str, **kwargs) -> dict:
+        # avoid top-level import if no llama is installed
+        from llama_cpp import LlamaGrammar
+        from llama_cpp.llama_grammar import JSON_ARR_GBNF
+
         return self.model.generate(
             prompt=LLMSplitMarkup.__prompt + input_text,
             grammar=LlamaGrammar.from_string(JSON_ARR_GBNF)  # TODO put it into config

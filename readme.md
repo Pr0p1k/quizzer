@@ -13,6 +13,8 @@
 3. **Question-answer Generation** - generate a number of question-answer pairs for each chapter using the extracts
 4. **Question Enrichment** - Add incorrect options for each previously generated question
 
+![flow](readme_imgs/quizzer%20flow.png)
+
 
 #### Split - Summarize - Generate
 

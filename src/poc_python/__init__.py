@@ -3,6 +3,7 @@ from enum import Enum
 from os.path import join
 from pathlib import Path
 from typing_extensions import deprecated
+from dotenv import load_dotenv
 
 from dynaconf import Dynaconf
 from jinja2 import Environment, PackageLoader, select_autoescape
@@ -41,3 +42,7 @@ CONFIG = Dynaconf(settings_files=["stages.toml", "llm-conf.toml", "quiz.toml", "
 
 # jinja
 JINJA = Environment(loader=PackageLoader("src.poc_python", "prompts"), autoescape=select_autoescape())
+
+# load env vars
+load_dotenv(dotenv_path=".env")
+load_dotenv(dotenv_path=".env.local", override=True)
