@@ -25,6 +25,7 @@ class ProcessingState(TypedDict):
     # place additional answers here. {(question, answer): [options]}
     enriched_questions: Annotated[dict, operator.or_]
     summary: Any
+    # topics extracted from each chapter
     rag_extracts: Annotated[dict, operator.or_]
 
 
