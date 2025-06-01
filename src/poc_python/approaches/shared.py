@@ -13,6 +13,24 @@ logging.root.setLevel(logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+import traceback
+
+
+def log_exceptions():
+    def decorator(func):
+        def wrapper(state):
+            try:
+                logger.info(f"Executing node: {func.__name__}: {state}")
+                return func(state)
+            except Exception as e:
+                tb = traceback.format_exc()
+                logger.error(f"Exception in node {func.__name__}: {e}\n{tb}")
+                raise e
+
+        return wrapper
+
+    return decorator
+
 class BaseState(TypedDict):
     name: str
     input_text: str
