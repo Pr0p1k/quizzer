@@ -11,7 +11,7 @@ from langgraph.types import Send
 from src.poc_python import CONFIG
 from src.poc_python.stages_approaches import STAGES
 from src.poc_python.text_processors.processor_provider import get_processor_lazy
-from src.poc_python.utils.output_utils import get_output, split_markup_text_json
+from src.poc_python.utils.output_utils import get_llm_output, split_markup_text_json
 
 logging.basicConfig()
 logging.root.setLevel(logging.INFO)
@@ -40,7 +40,7 @@ def do_split(state: ProcessingState):
         processor = get_processor_lazy(STAGES["LANGGRAPH_SPLIT"])
         output_dict = processor.process(state["input_text"])
         return {"stages_metadata": [(STAGES["LANGGRAPH_SPLIT"], output_dict)],
-                "chapters_json": split_markup_text_json(get_output(output_dict))}
+                "chapters_json": split_markup_text_json(get_llm_output(output_dict))}
     except Exception as e:
         logger.error(e)
 
@@ -105,7 +105,7 @@ def enrich_question(args: dict):
         llm = get_processor_lazy(STAGES["LANGGRAPH_ENRICH_QUESTION"])  # TODO replace with a class with fields
         enriched_output_dict = llm.process(args["question"], correct_answer=args["correct_answer"],
                                            num_of_options=args["number_of_alternatives"])
-        enriched_output = get_output(enriched_output_dict)
+        enriched_output = get_llm_output(enriched_output_dict)
 
         return {"stages_metadata": [(STAGES["LANGGRAPH_ENRICH_QUESTION"], enriched_output_dict)],
                 "enriched_questions": {args["question"]: json.loads(enriched_output)}}

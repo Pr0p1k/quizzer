@@ -44,5 +44,5 @@ CONFIG = Dynaconf(settings_files=["stages.toml", "llm-conf.toml", "quiz.toml", "
 JINJA = Environment(loader=PackageLoader("src.poc_python", "prompts"), autoescape=select_autoescape())
 
 # load env vars
-load_dotenv(dotenv_path=".env")
-load_dotenv(dotenv_path=".env.local", override=True)
+load_dotenv(dotenv_path=join(ROOT_DIR, ".env"))
+load_dotenv(dotenv_path=join(ROOT_DIR, ".env.local"), override=True)

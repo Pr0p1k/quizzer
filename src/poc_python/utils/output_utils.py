@@ -8,14 +8,21 @@ from typing import Any
 from langchain_core.messages import AIMessage, BaseMessage
 
 
-def get_output(response: Any) -> str:
+def get_llm_output(response: Any) -> str:
+    """
+    LLMs can return the output wrapped into dict with choices, etc.
+    """
     if isinstance(response, dict):
-        if "choices" not in response:  # TODO follow some structure
+        if "choices" not in response:
             return response["output"]
         return response["choices"][0]["text"]
 
     if isinstance(response, BaseMessage):
         return response.content
+
+    raise Exception(f"Unexpected response structure: {response}")
+
+
 
 
 def split_outline_list(outline: str) -> list:
@@ -34,6 +41,21 @@ def split_markup_text_json(json_content: Any) -> list[dict]:
         raise Exception(f"Invalid type of json content: {type(json_content)}")
 
     return json.loads(json_string)
+
+def get_chapters_dict_from_json(json_content: Any) -> dict:
+    """
+    returns: dict with chapter names as keys and chapter contents as values
+    """
+    if isinstance(json_content, BaseMessage):
+        json_string = json_content.content
+    elif isinstance(json_content, str):
+        json_string = json_content
+    else:
+        raise Exception(f"Invalid type of json content: {type(json_content)}")
+
+    chapters_list = json.loads(json_string)
+
+    return {chapter["chapter_name"]: chapter["chapter_content"] for chapter in chapters_list}
 
 
 def persist_generated(base_path: str, source_file_name: str, output: dict):

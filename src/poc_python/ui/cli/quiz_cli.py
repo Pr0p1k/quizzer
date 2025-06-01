@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 from random import shuffle
+from typing import Union
 
 from colorama import Fore
 from colorama import Style
 from colorama import init as colorama_init
 
 from src.poc_python import CONFIG
+from src.poc_python.approaches.shared import ChapterState, BaseState
 from src.poc_python.process_new_text_langgraph import ProcessingState
 from src.poc_python.quiz.chapters import Chapter, SubChapter
 from src.poc_python.quiz.questions import Question, OptionQuestion
@@ -17,7 +19,7 @@ def get_prompt(question: Question, number: int):
     options = list(
         map(
             lambda num_str: f"{' ' * 8}{num_str[0] + 1}. {num_str[1]}\n",
-            enumerate(question.options)
+            enumerate(question.get_options())
         )
     ) if isinstance(question, OptionQuestion) else ""
 
@@ -49,18 +51,9 @@ class QuizCliUi:
         self.give_answers = CONFIG.quiz_general.give_answers
 
     @staticmethod
-    def from_state(state: ProcessingState) -> QuizCliUi:
-        chapters: list[Chapter] = []
-        for name, unenriched_questions in state["chapters"].items():
-            source_text = [chp["chapter_content"] for chp in state["chapters_json"] if
-                           chp["chapter_name"] == name][0]  # TODO assess case where more/less than 1 value
-            questions = [Question.from_fields("OptionQuestion",
-                                              q["question"],
-                                              q["correct_answer"],
-                                              join_and_shuffle_answer_options(state, q))
-                         for q in unenriched_questions]
-            chapters.append(SubChapter(name, source_text, questions))
-        return QuizCliUi(Quiz(state["name"], chapters))
+    def from_state(state: Union[ChapterState | BaseState]) -> QuizCliUi:
+
+        return QuizCliUi(Quiz(state["name"], state))
 
     def start_quiz(self):
         colorama_init(autoreset=True)
@@ -79,7 +72,7 @@ class QuizCliUi:
                     questions_seen_total += 1
                     answer = input(get_prompt(question, number))
 
-                    is_correct = question.evaluate_answer(int(answer))
+                    is_correct = question.evaluate_answer(answer)
 
                     score += int(is_correct)  # add 0 or 1
 

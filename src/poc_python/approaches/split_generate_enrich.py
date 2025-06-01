@@ -9,10 +9,10 @@ from langgraph.graph import StateGraph
 from langgraph.types import Send
 
 from src.poc_python import CONFIG
-from src.poc_python.approaches.shared import ProcessingState, do_split
+from src.poc_python.approaches.shared import ProcessingState, split_chapters
 from src.poc_python.stages_approaches import STAGES
 from src.poc_python.text_processors.processor_provider import get_processor_lazy
-from src.poc_python.utils.output_utils import get_output, split_markup_text_json
+from src.poc_python.utils.output_utils import get_llm_output, split_markup_text_json
 
 from src.poc_python.approaches.approach import Approach
 
@@ -27,7 +27,7 @@ class SplitGenerateEnrich(Approach):
 
         builder = StateGraph(ProcessingState)
 
-        builder.add_node(STAGES["LANGGRAPH_SPLIT"], do_split)
+        builder.add_node(STAGES["LANGGRAPH_SPLIT"], split_chapters)
         builder.add_node("generate_questions_for_chapter", self.__generate_questions_for_chapter)
         builder.add_node(STAGES["LANGGRAPH_ENRICH_QUESTION"], self.__enrich_question)
         builder.add_node("collect_all_questions", self.__collect_all_questions)
@@ -109,7 +109,7 @@ class SplitGenerateEnrich(Approach):
             llm = get_processor_lazy(STAGES["LANGGRAPH_ENRICH_QUESTION"])  # TODO replace with a class with fields
             enriched_output_dict = llm.process(args["question"], correct_answer=args["correct_answer"],
                                                num_of_options=args["number_of_alternatives"])
-            enriched_output = get_output(enriched_output_dict)
+            enriched_output = get_llm_output(enriched_output_dict)
 
             return {"stages_metadata": [(STAGES["LANGGRAPH_ENRICH_QUESTION"], enriched_output_dict)],
                     "enriched_questions": {args["question"]: json.loads(enriched_output)}}

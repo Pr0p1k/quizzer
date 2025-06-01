@@ -4,7 +4,7 @@ from quiz.chapters import SubChapter
 from quiz.questions import Question
 from quiz.quiz import Quiz
 from src.poc_python import MEM, Stage, BYPASS_CACHE
-from src.poc_python.utils.output_utils import get_output, get_key_points_list_json, split_markup_text_json
+from src.poc_python.utils.output_utils import get_llm_output, get_key_points_list_json, split_markup_text_json
 from src.poc_python.text_processors.processor_provider import get_processor_lazy
 
 logging.basicConfig()
@@ -38,7 +38,7 @@ def generate_full_quiz(subject_name: str, text: str, key_points_per_chapter: int
     else:
         markup_output = generate_markup(text)
 
-    chapter_dicts = split_markup_text_json(get_output(markup_output))
+    chapter_dicts = split_markup_text_json(get_llm_output(markup_output))
 
     logger.info(f"Text is split into {len(chapter_dicts)} chapters")
 
@@ -50,7 +50,7 @@ def generate_full_quiz(subject_name: str, text: str, key_points_per_chapter: int
                                                 chapter_dict["chapter_content"],
                                                 key_points_per_chapter)
 
-        key_points: list[dict] = get_key_points_list_json(get_output(key_points_output))
+        key_points: list[dict] = get_key_points_list_json(get_llm_output(key_points_output))
 
         logger.info(f"Extracted {len(key_points)} key points for chapter '{chapter_dict["chapter_name"]}'")
 
@@ -63,7 +63,7 @@ def generate_full_quiz(subject_name: str, text: str, key_points_per_chapter: int
                                               chapter_dict["chapter_content"],
                                               point_dict["key_point"],
                                               "OptionQuestion")
-            question_output = get_output(question_output)
+            question_output = get_llm_output(question_output)
 
             logger.info(f"Generated question: {question_output}")
             try:
